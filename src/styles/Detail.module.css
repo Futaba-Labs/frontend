@@ -1,0 +1,76 @@
+.detail {
+  margin-top: 80px;
+  display: flex;
+}
+.image {
+  flex: 1;
+}
+.nft_image {
+  margin-left: 150px;
+  padding: 32px;
+  width: 300px;
+  height: 300px;
+  box-shadow: 2px 2px 4px;
+}
+.image_detail {
+  flex: 1;
+}
+
+.title {
+  margin-top: 52px;
+
+  font-family: "Helvetica Neue";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 34px;
+  /* or 53% */
+
+  color: #515151;
+}
+
+.author {
+  margin-top: 24px;
+  margin-bottom: 32px;
+  font-family: "Helvetica Neue";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 34px;
+  /* or 81% */
+  color: #333333;
+}
+
+.price {
+  margin-top: 8px;
+  margin-left: 8px;
+  font-family: "Helvetica Neue";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 34px;
+  /* or 94% */
+
+  color: #c4c4c4;
+}
+
+.eth_logo {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.jpyc_logo {
+  margin-right: 80px;
+}
+.top_16px {
+  margin-top: 16px;
+}
+.top_8px {
+  margin-top: 8px;
+}
+.left_8px {
+  margin-left: 8px;
+}
+.top_64px {
+  margin-top: 40px;
+}
