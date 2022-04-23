@@ -1,0 +1,33 @@
+.absolute {
+    position: absolute;
+    left: 0%;
+    top: 0%;
+  }
+  .menu_text{
+      width: 160px;
+    font-family: 'Helvetica Neue';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    /* or 460% */
+    
+    display: flex;
+    align-items: center;
+    text-align: center;
+    /* White */
+    
+   
+  }
+  .padding_left_16px{
+      margin-left:16px;
+  }
+  .menu_contents{
+      margin-left: 20%;
+      margin-right: 5%;
+  }
+  .menu_row{
+      padding-top: 30px;
+      padding-bottom:16px;
+      width: 100%;
+      background: linear-gradient(90deg, #CE91FF 0%, #FFACB1 29.99%, #FBDA86 52.74%, #FFACB1 74.12%, #CE90FF 100%);
+  }

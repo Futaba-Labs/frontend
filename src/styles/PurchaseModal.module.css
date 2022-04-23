@@ -1,0 +1,32 @@
+.header{
+    background: linear-gradient(91.22deg, #3113EA 42.01%, #8222BD 55.53%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+text-fill-color: transparent;
+}
+.image_box{
+    width:150px;
+    height:150px;
+}
+.title{
+    font-family: 'Helvetica Neue';
+font-style: normal;
+font-weight: 700;
+font-size: 28px;
+line-height: 34px;
+/* or 71% */
+
+
+color: #515151;
+}
+.price{
+font-family: 'Helvetica Neue';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+line-height: 34px;
+/* or 106% */
+
+color: #C4C4C4;
+}

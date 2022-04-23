@@ -1,5 +1,5 @@
 .container {
-  padding: 0 2rem;
+
 }
 
 .main {
@@ -107,7 +107,22 @@
   height: 1em;
   margin-left: 0.5rem;
 }
-
+.home_background{
+  width: 100%;
+}
+.relative{
+  position: relative;
+}
+.absolute {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+}
+.absolute_menu {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
 @media (max-width: 600px) {
   .grid {
     width: 100%;

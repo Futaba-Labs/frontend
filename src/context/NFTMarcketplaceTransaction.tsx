@@ -1,6 +1,6 @@
 import { Web3ContextInterface } from "@/types/web3Types";
 import { getWeb3Provider } from "@/utils/web3Util";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 type Interface = Web3ContextInterface;
 
@@ -24,6 +24,10 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{ key?: strin
       console.error(error);
     }
   }
+
+  useEffect(() => {
+    connectWallet()
+  })
 
   return (
     <NFTMarcketTransaction.Provider
