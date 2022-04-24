@@ -5,9 +5,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/PurchaseModal.module.css'
 import { NFT } from '@/types/web3Types'
-import { JPYCSwap } from '@/utils/jpycSwap'
 import { useWeb3 } from '@/hooks/useWeb3'
 import { useContract } from '@/hooks/useContract'
+import { JPYCSwap } from '@t_adachi/jpyc-swap'
 
 interface Props {
   nft: NFT
@@ -26,7 +26,7 @@ const PurchaseModal: NextPage<Props> = (props) => {
   const purchase = async () => {
     if(provider && contract) {
       const jpycSwap = new JPYCSwap(provider, 4)
-      await jpycSwap.swap(props.nft.price)
+      await jpycSwap.swap(props.nft.price / 10)
       try {
         console.log('testetts')
         const tx = await contract.createMarketSale(props.nft.tokenId);

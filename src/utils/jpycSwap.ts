@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
 import { abi as UniswapV3Factory_ABI } from '@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json'
 import { abi as SwapRouterABI } from '@uniswap/v3-periphery/artifacts/contracts/interfaces/ISwapRouter.sol/ISwapRouter.json'
@@ -89,50 +89,59 @@ export class JPYCSwap {
   }
 
   swap = async (price: number) => {
-    const immutables = await getPoolImmutables(this.poolContract)
-    const state = await getPoolState(this.poolContract)
+    try {
+      const immutables = await getPoolImmutables(this.poolContract)
+      const state = await getPoolState(this.poolContract)
 
-    const swapRouterContract = new ethers.Contract(
-      this.swapRouterAddress,
-      SwapRouterABI,
-      this.provider
-    )
+      const swapRouterContract = new ethers.Contract(
+        this.swapRouterAddress,
+        SwapRouterABI,
+        this.provider
+      )
 
-    const inputAmount = price * 1.01
-    const amountIn = ethers.utils.parseUnits(
-      inputAmount.toString(),
-      decimals0
-    )
+      const inputAmount = price * 1.01
+      const amountIn = ethers.utils.parseUnits(
+        inputAmount.toString(),
+        decimals0
+      )
 
-    const approvalAmount = (amountIn as unknown as number * 100000).toString()
-    const tokenContract0 = new ethers.Contract(
-      address0,
-      ERC20ABI,
-      this.provider
-    )
-    const approvalResponse = await tokenContract0.connect(this.web3Provider.getSigner()).approve(
-      this.swapRouterAddress,
-      approvalAmount
-    )
+      const ethRate = await this.showPrice(inputAmount)
+      const amountInMaximum = (Math.floor(ethRate * 1.1)).toString() + "000000000000000000"
 
-    const params = {
-      tokenIn: immutables.token1,
-      tokenOut: immutables.token0,
-      fee: immutables.fee,
-      recipient: this.web3Provider.getSigner().getAddress(),
-      deadline: Math.floor(Date.now() / 1000) + (60 * 10),
-      amountIn: amountIn,
-      amountOutMinimum: 0,
-      sqrtPriceLimitX96: 0,
-    }
+      const approvalAmount = (amountInMaximum as unknown as number * 100000).toString()
+      console.log(amountIn)
+      const tokenContract0 = new ethers.Contract(
+        address0,
+        ERC20ABI,
+        this.provider
+      )
+      const approvalResponse = await tokenContract0.connect(this.web3Provider.getSigner()).approve(
+        this.swapRouterAddress,
+        amountInMaximum,
+      )
 
-    const transaction = await swapRouterContract.connect(this.web3Provider.getSigner()).exactInputSingle(
-      params,
-      {
-        gasLimit: ethers.utils.hexlify(1000000)
+      const params = {
+        tokenIn: immutables.token0,
+        tokenOut: immutables.token1,
+        fee: immutables.fee,
+        recipient: this.web3Provider.getSigner().getAddress(),
+        deadline: Math.floor(Date.now() / 1000) + (60 * 10),
+        amountOut: amountIn,
+        amountInMaximum: BigNumber.from(amountInMaximum),
+        sqrtPriceLimitX96: 0,
       }
-    ).then((transaction: any) => {
-      console.log(transaction)
-    })
+
+      const transaction = await swapRouterContract.connect(this.web3Provider.getSigner()).exactOutputSingle(
+        params,
+        {
+          gasLimit: ethers.utils.hexlify(1000000)
+        }
+      ).then((transaction: any) => {
+        console.log(transaction)
+      })
+    } catch (e) {
+      console.log(e)
+      return e
+    }
   }
 }
