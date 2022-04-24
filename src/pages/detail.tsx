@@ -18,7 +18,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useContract } from '@/hooks/useContract'
 import { NFT } from '@/types/web3Types'
-import { JPYCSwap } from '@/utils/jpycSwap'
+import { JPYCSwap } from '@t_adachi/jpyc-swap'
 import { useWeb3 } from '@/hooks/useWeb3'
 
 const Detail: NextPage = () => {

@@ -10,8 +10,7 @@ import { useContract } from '@/hooks/useContract'
 import { useEffect, useState } from 'react'
 import { NFT } from '@/types/web3Types'
 import { useWeb3 } from '@/hooks/useWeb3'
-import { JPYCSwap } from '@/utils/jpycSwap'
-
+import { JPYCSwap } from '@t_adachi/jpyc-swap'
 
 const NFTCard: NextPage = () => {
   const router = useRouter()
