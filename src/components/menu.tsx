@@ -22,11 +22,11 @@ const Menu: NextPage = () => {
       <Row justify='space-between' className={styles.menu_row}>
         <div className={styles.menu_contents}>
           <Row>
-            <a href='#'><Text color='#12eb27' className={styles.menu_text}>ドキュメント</Text></a>
+            <a href='#'><Text color='#12eb27' className={styles.menu_text}></Text></a>
             <div className={styles.padding_left_16px}></div>
-            <a href='#'> <Text color='#12eb27' className={styles.menu_text}>ライブラリ</Text></a>
+            <a href='#'> <Text color='#12eb27' className={styles.menu_text}></Text></a>
             <div className={styles.padding_left_16px}></div>
-            <a href='#'><Text color='#12eb27' className={styles.menu_text}>私たちについて</Text></a>
+            <a href='#'><Text color='#12eb27' className={styles.menu_text}></Text></a>
           </Row>
         </div>
         <ConnectWallet />
