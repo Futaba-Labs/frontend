@@ -4388,10 +4388,10 @@ functions-have-names@^1.2.2:
   resolved "https://registry.npmjs.org/functions-have-names/-/functions-have-names-1.2.3.tgz"
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
 
-futaba-package@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/futaba-package/-/futaba-package-0.0.1.tgz#2d4e6fa5be0c3fe34d9b76b33fb70261f6afa088"
-  integrity sha512-uy/j/3d3iPQuw5M/7BA9ogt94QuaZu+ijW89968NCzea16PLHDMWIWtP6L7DS6W4GRuqUaLNBTezQADNogfcRw==
+futaba-package@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/futaba-package/-/futaba-package-0.0.2.tgz#f08ef80cd72e82d5a97170e28220d2409da8552c"
+  integrity sha512-jouZkKIOcw4xkIB2ks2MTAuHcbhq516ENIOTsPS04S6k/kuMuL+DVIjLja9ivGh6cipRp72kEBdBc+XazPHKfA==
 
 get-caller-file@^2.0.1, get-caller-file@^2.0.5:
   version "2.0.5"

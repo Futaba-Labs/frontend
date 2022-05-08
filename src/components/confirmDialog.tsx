@@ -10,7 +10,7 @@ import {useWeb3} from '@/hooks/useWeb3'
 import {getCoinImage} from '@/utils/handleChainAndCoin'
 import {toast} from 'react-toastify'
 import StatusDialog from './statusDialog'
-import { EasyDex } from 'futaba-package'
+import { EasyDex } from '@/lib/src'
 
 
 interface Props {
