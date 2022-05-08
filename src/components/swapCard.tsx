@@ -9,7 +9,7 @@ import ChainSelect from './chainSelect'
 import {Chain, Coin, TransactionData} from '@/types/utilTypes'
 import ConfirmDialog from './confirmDialog'
 import {useWeb3} from '@/hooks/useWeb3'
-import {EasyDex} from '@/lib/src'
+import { EasyDex } from 'futaba-package'
 import ErrorMessage from './errorMessage'
 
 

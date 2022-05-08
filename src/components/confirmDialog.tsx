@@ -7,10 +7,10 @@ import {Chain, Coin, TransactionData, TransactionStatus} from '@/types/utilTypes
 import Image from 'next/image'
 import SwapRoute from '../images/swap_route.png'
 import {useWeb3} from '@/hooks/useWeb3'
-import {EasyDex} from '@/lib/src'
 import {getCoinImage} from '@/utils/handleChainAndCoin'
 import {toast} from 'react-toastify'
 import StatusDialog from './statusDialog'
+import { EasyDex } from 'futaba-package'
 
 
 interface Props {

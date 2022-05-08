@@ -1,4 +1,4 @@
-import {EasyDex} from '@/lib/src'
+import { EasyDex } from 'futaba-package'
 import {TransactionStatus} from '@/types/utilTypes'
 import {Col, Divider, Loading, Modal, Row} from '@nextui-org/react'
 import {NextPage} from 'next'
