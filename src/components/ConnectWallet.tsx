@@ -1,31 +1,42 @@
-import React, { useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import {Modal, Input, Row, Checkbox, Button, Text} from '@nextui-org/react'
 import type {NextPage} from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/ConnectWallet.module.css'
 import metamask from '../images/MetaMask_Fox1.png'
-import { useWeb3 } from '@/hooks/useWeb3'
+import {useWeb3} from '@/hooks/useWeb3'
 
 
 const ConnectWallet: NextPage = () => {
   const {connectWallet, provider} = useWeb3()
+  const [address, setAddress] = useState('')
   const [visible, setVisible] = React.useState(false)
   const handler = () => setVisible(true)
   const closeHandler = () => {
     setVisible(false)
   }
 
+  const setWalletAddress = async () => {
+    if (provider) {
+      const address = await provider.getSigner().getAddress()
+      setAddress(address.slice(0, 4) + '...' + address.slice(-4))
+    }
+  }
+
   useEffect(() => {
-    if(provider) {
+    if (provider) {
       setVisible(false)
+      setWalletAddress()
     }
   }, [provider])
 
   return (
     <div>
-      {!provider && <Button auto color="gradient" shadow onClick={handler}>
+      {!provider ? <Button rounded auto css={{backgroundColor: '#12eb27'}} shadow onClick={handler}>
         ウォレットに接続
+      </Button> : <Button rounded auto css={{backgroundColor: '#12eb27'}} shadow disabled>
+        {address}
       </Button>}
 
       <Modal

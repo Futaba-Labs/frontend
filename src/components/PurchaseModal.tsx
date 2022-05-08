@@ -4,10 +4,10 @@ import type {NextPage} from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/PurchaseModal.module.css'
-import { NFT } from '@/types/web3Types'
-import { useWeb3 } from '@/hooks/useWeb3'
-import { useContract } from '@/hooks/useContract'
-import { JPYCSwap } from '@t_adachi/jpyc-swap'
+import {NFT} from '@/types/web3Types'
+import {useWeb3} from '@/hooks/useWeb3'
+import {useContract} from '@/hooks/useContract'
+import {JPYCSwap} from '@t_adachi/jpyc-swap'
 
 interface Props {
   nft: NFT
@@ -24,17 +24,17 @@ const PurchaseModal: NextPage<Props> = (props) => {
     console.log('closed')
   }
   const purchase = async () => {
-    if(provider && contract) {
+    if (provider && contract) {
       const jpycSwap = new JPYCSwap(provider, 4)
       await jpycSwap.swap(props.nft.price / 10)
       try {
         console.log('testetts')
-        const tx = await contract.createMarketSale(props.nft.tokenId);
-          console.log('Waiting...')
-          await tx.wait()
-          console.log(tx)
-      } catch(e) {
-        console.error(e);
+        const tx = await contract.createMarketSale(props.nft.tokenId)
+        console.log('Waiting...')
+        await tx.wait()
+        console.log(tx)
+      } catch (e) {
+        console.error(e)
       }
     }
   }

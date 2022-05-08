@@ -6,16 +6,16 @@ import JPYC_logo from '../images/jpyc_logo.png'
 import styles from '../styles/NFTCard.module.css'
 import {Card, Grid, Row, Text} from '@nextui-org/react'
 import {useRouter} from 'next/router'
-import { useContract } from '@/hooks/useContract'
-import { useEffect, useState } from 'react'
-import { NFT } from '@/types/web3Types'
-import { useWeb3 } from '@/hooks/useWeb3'
-import { JPYCSwap } from '@t_adachi/jpyc-swap'
+import {useContract} from '@/hooks/useContract'
+import {useEffect, useState} from 'react'
+import {NFT} from '@/types/web3Types'
+import {useWeb3} from '@/hooks/useWeb3'
+import {JPYCSwap} from '@t_adachi/jpyc-swap'
 
 const NFTCard: NextPage = () => {
   const router = useRouter()
-  const [isLoading, setisLoading] = useState(false);
-  const [nfts, setNFTs] = useState<NFT[]>([]);
+  const [isLoading, setisLoading] = useState(false)
+  const [nfts, setNFTs] = useState<NFT[]>([])
   const contract = useContract()
   const {provider} = useWeb3()
 
@@ -26,24 +26,24 @@ const NFTCard: NextPage = () => {
 
   const fetchNFT = async () => {
     try {
-      if(contract) {
-        setisLoading(true);
+      if (contract) {
+        setisLoading(true)
         setNFTs([])
         const jpycSwap = new JPYCSwap(provider!, 4)
-        const items = await contract.fetchMarketItems();
+        const items = await contract.fetchMarketItems()
         items.map(async (item: any) => {
           console.log('hju')
           const tokenId = item.tokenId
           const tokenURI = await contract.tokenURI(tokenId)
           const list: NFT[] = nfts
           const jpycPrice = await jpycSwap.showPrice(parseInt(item.price._hex))
-          list.push({tokenId: parseInt(tokenId._hex).toString(), name: "test", price: parseInt(item.price._hex), jpycPrice: jpycPrice, image: tokenURI})
+          list.push({tokenId: parseInt(tokenId._hex).toString(), name: 'test', price: parseInt(item.price._hex), jpycPrice: jpycPrice, image: tokenURI})
           setNFTs(list)
         })
-        setisLoading(false);
+        setisLoading(false)
       }
-    } catch(e) {
-      console.error(e);
+    } catch (e) {
+      console.error(e)
     }
   }
 

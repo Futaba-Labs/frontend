@@ -1,35 +1,44 @@
 import Button from '@/components/Button'
 import type {NextPage} from 'next'
-import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import HomeBackGround from '../images/home_background.png'
-import {height} from '@mui/system'
-import Title from '@/components/Title'
-import Heading from '@/components/Heading'
-import NFTCard from '@/components/NFTCard'
 import Menu from '@/components/menu'
+import SwapCard from '@/components/swapCard'
+import {Container} from '@nextui-org/react'
+import {ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import StatusDialog from '@/components/statusDialog'
+import {useState} from 'react'
+import {useWeb3} from '@/hooks/useWeb3'
+
 
 const Home: NextPage = () => {
-  const test = () => {}
+  const {provider, transactionStatuses, visible, setVisible} = useWeb3()
 
-
+  const closeHandler = () => {
+    setVisible(false)
+  }
   return (
     <div className={styles.container}>
-
-      <div className={styles.relative}>
-        <Image src={HomeBackGround} alt="" title="" />
+      <header className={styles.header}>
         <div className={styles.absolute_menu}><Menu /></div>
-
-        <a className={styles.absolute}>aa</a>
-        <Title />
+      </header>
+      <div className={styles.relative}>
       </div>
-      <Button result={2} result2={22} function={() => test()}/>
-
-      <Heading content={'出品リスト'} />
-      <NFTCard />
+      <SwapCard />
+      <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/>
+      <ToastContainer
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        position={'bottom-right'}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
-
   )
 }
 
