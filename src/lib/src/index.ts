@@ -12,8 +12,7 @@ global.XMLHttpRequest = require('xhr2')
 require('dotenv').config()
 
 const privateKey: string = process.env.NEXT_PUBLIC_PRIVATE_KEY ?? ''
-console.log(privateKey)
-const astarProvider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_ASTAR_URL)
+const astarProvider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_ASTAR_URL ?? '')
 const walletWithAstarProvider = new ethers.Wallet(privateKey, astarProvider)
 
 interface Window {
