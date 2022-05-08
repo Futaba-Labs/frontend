@@ -2,8 +2,8 @@ import { BigNumber, ethers } from 'ethers'
 import ERC20ABI from './abis/abi.json'
 import { abi as BridgeABI } from '../contract/abi/Bridge.sol/Bridge.json'
 import { ChainId } from '@uniswap/smart-order-router'
-import { WebClient } from './ts-proto/gateway/GatewayServiceClientPb'
-import { GetTransferStatusRequest } from './ts-proto/gateway/gateway_pb'
+import { GetTransferStatusRequest } from '../ts-proto/gateway/gateway_pb'
+import { WebClient } from '../ts-proto/gateway/GatewayServiceClientPb'
 
 
 export const bridge = async (web3Provider: ethers.providers.Web3Provider, amount: BigNumber, maxSlipage: number): Promise<[ethers.providers.TransactionResponse | null, string]> => {

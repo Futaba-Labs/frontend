@@ -3,8 +3,9 @@ import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import { BigNumber, ethers } from 'ethers'
 import { JSBI } from 'quickswap-sdk'
 import { abi as AstarSwapRouterABI } from './abis/AstarSwapRouter.json'
-import { WebClient } from './ts-proto/gateway/GatewayServiceClientPb'
-import { EstimateAmtRequest } from './ts-proto/gateway/gateway_pb'
+import { WebClient } from '../ts-proto/gateway/GatewayServiceClientPb'
+import { EstimateAmtRequest } from '../ts-proto/gateway/gateway_pb'
+
 
 global.XMLHttpRequest = require('xhr2')
 

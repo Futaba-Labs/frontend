@@ -5,8 +5,8 @@ import { uniswap } from './uniswap'
 import { estimateFee } from './estimateFee'
 import { bridge, checkBridgeStatus } from './bridge'
 import ERC20ABI from './abis/abi.json'
-import { WebClient } from './ts-proto/gateway/GatewayServiceClientPb'
-import { GetTransferStatusRequest } from './ts-proto/gateway/gateway_pb'
+import { GetTransferStatusRequest } from '../ts-proto/gateway/gateway_pb'
+import { WebClient } from '../ts-proto/gateway/GatewayServiceClientPb'
 
 global.XMLHttpRequest = require('xhr2')
 require('dotenv').config()
