@@ -1,0 +1,34 @@
+.container {
+  position: fixed;
+}
+.absolute {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+}
+.menu_text {
+  width: 160px;
+  font-family: "Helvetica Neue";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  /* or 460% */
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #12eb27;
+}
+.padding_left_16px {
+  margin-left: 16px;
+}
+.menu_contents {
+  margin-left: 20%;
+  margin-right: 80%;
+}
+.menu_row {
+  width: 100%;
+}
+.top_16px {
+  margin-top: 16px;
+}

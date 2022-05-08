@@ -1,0 +1,20 @@
+
+.absolute {
+    position: absolute;
+    left: 10%;
+    top: 30%;
+  }
+
+  .subtitle {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .buttons{
+    display: flex;
+    align-items: center;
+    
+  }
+  .library_link{
+    padding-left: 8px;
+  }

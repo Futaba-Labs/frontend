@@ -1,0 +1,25 @@
+.swap_predict {
+  border-radius: 16px;
+  background-color: #f6f8f8;
+  padding: 16px 16px 4px 16px;
+  margin-bottom: 8px;
+}
+
+.swap_price {
+  border-radius: 16px;
+  background-color: #f6f8f8;
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+.price_list {
+  display: flex;
+  flex-direction: row;
+}
+
+.detail {
+  border-radius: 16px;
+  background-color: #f6f8f8;
+  padding: 16px;
+  margin-bottom: 8px;
+}
