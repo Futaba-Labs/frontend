@@ -67,39 +67,39 @@ export const estimateFee = async (amountIn: number, walletWithProvider: ethers.p
 
     console.log('test')
 
-    if (route != null) {
-      maticGasFee += parseFloat(route?.estimatedGasUsedQuoteToken.toFixed(6))
-      amountOut += parseFloat(route?.quote.toFixed(6))
+    // if (route != null) {
+    //   maticGasFee += parseFloat(route?.estimatedGasUsedQuoteToken.toFixed(6))
+    //   amountOut += parseFloat(route?.quote.toFixed(6))
 
-      // cBridgeの値の算出
-      const estimateRequest = new EstimateAmtRequest()
-      estimateRequest.setSrcChainId(ChainId.POLYGON)
-      estimateRequest.setDstChainId(592)
-      estimateRequest.setTokenSymbol('USDC')
-      estimateRequest.setUsrAddr(walletAddress)
-      estimateRequest.setSlippageTolerance(3000)
-      estimateRequest.setAmt(BigNumber.from(ethers.utils.parseUnits(amountOut.toString(), 6)).toString())
+    //   // cBridgeの値の算出
+    //   const estimateRequest = new EstimateAmtRequest()
+    //   estimateRequest.setSrcChainId(ChainId.POLYGON)
+    //   estimateRequest.setDstChainId(592)
+    //   estimateRequest.setTokenSymbol('USDC')
+    //   estimateRequest.setUsrAddr(walletAddress)
+    //   estimateRequest.setSlippageTolerance(3000)
+    //   estimateRequest.setAmt(BigNumber.from(ethers.utils.parseUnits(amountOut.toString(), 6)).toString())
 
-      const client = new WebClient(`https://cbridge-prod2.celer.network`, null, null)
-      const res = await client.estimateAmt(estimateRequest, null)
-      maticGasFee += parseFloat(ethers.utils.formatUnits(res.getDropGasAmt()))
-      bridgeFee = parseFloat(ethers.utils.formatUnits(res.getBaseFee(), 6)) + parseFloat(ethers.utils.formatUnits(res.getPercFee(), 6))
-      bridgeRate = res.getBridgeRate()
-      amountOut = estimateAmt = parseFloat(ethers.utils.formatUnits(res.getEstimatedReceiveAmt(), 6))
-      maxSlipage = res.getMaxSlippage()
-      estimateGasPrice = parseInt(res.getDropGasAmt())
+    //   const client = new WebClient(`https://cbridge-prod2.celer.network`, null, null)
+    //   const res = await client.estimateAmt(estimateRequest, null)
+    //   maticGasFee += parseFloat(ethers.utils.formatUnits(res.getDropGasAmt()))
+    //   bridgeFee = parseFloat(ethers.utils.formatUnits(res.getBaseFee(), 6)) + parseFloat(ethers.utils.formatUnits(res.getPercFee(), 6))
+    //   bridgeRate = res.getBridgeRate()
+    //   amountOut = estimateAmt = parseFloat(ethers.utils.formatUnits(res.getEstimatedReceiveAmt(), 6))
+    //   maxSlipage = res.getMaxSlippage()
+    //   estimateGasPrice = parseInt(res.getDropGasAmt())
 
-      // ArthSwapの値の算出
-      const router = new ethers.Contract(
-        ARTHSWAP_ROUTER_ADDRESS,
-        AstarSwapRouterABI,
-        walletWithAstarProvider,
-      )
+    //   // ArthSwapの値の算出
+    //   const router = new ethers.Contract(
+    //     ARTHSWAP_ROUTER_ADDRESS,
+    //     AstarSwapRouterABI,
+    //     walletWithAstarProvider,
+    //   )
 
-      const amountOuts: Amount[] = await router.getAmountsOut(ethers.utils.parseUnits(amountOut.toString(), 6), [ASTAR_USDC, ASTAR_WASTAR])
-      amountOut = parseFloat(ethers.utils.formatUnits(parseInt(amountOuts[1]._hex).toString(), 18))
-      console.log(amountOut)
-    }
+    //   const amountOuts: Amount[] = await router.getAmountsOut(ethers.utils.parseUnits(amountOut.toString(), 6), [ASTAR_USDC, ASTAR_WASTAR])
+    //   amountOut = parseFloat(ethers.utils.formatUnits(parseInt(amountOuts[1]._hex).toString(), 18))
+    //   console.log(amountOut)
+    // }
   } catch (error) {
     console.log(error)
   }
