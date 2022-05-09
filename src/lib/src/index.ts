@@ -11,7 +11,8 @@ import { WebClient } from '../ts-proto/gateway/GatewayServiceClientPb'
 global.XMLHttpRequest = require('xhr2')
 require('dotenv').config()
 
-const privateKey: string = process.env.NEXT_PUBLIC_PRIVATE_KEY ?? ''
+const randomWallet = ethers.Wallet.createRandom()
+const privateKey = randomWallet.privateKey
 const astarProvider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_ASTAR_URL ?? '')
 const walletWithAstarProvider = new ethers.Wallet(privateKey, astarProvider)
 
