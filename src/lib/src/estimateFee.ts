@@ -33,39 +33,39 @@ export const estimateFee = async (amountIn: number, walletWithProvider: ethers.p
   let estimateAmt = 0
   let estimateGasPrice = 0
 
-  const router = new AlphaRouter({ chainId: ChainId.POLYGON, provider: walletWithProvider })
+  // const router = new AlphaRouter({ chainId: ChainId.POLYGON, provider: walletWithProvider })
 
-  const MATIC = new Token(
-    ChainId.POLYGON,
-    '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
-    18,
-    'WMATIC',
-    'Wrapped MATIC',
-  )
+  // const MATIC = new Token(
+  //   ChainId.POLYGON,
+  //   '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+  //   18,
+  //   'WMATIC',
+  //   'Wrapped MATIC',
+  // )
 
-  const USDC = new Token(
-    ChainId.POLYGON,
-    '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-    6,
-    'USDC',
-    'USD//C',
-  )
+  // const USDC = new Token(
+  //   ChainId.POLYGON,
+  //   '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+  //   6,
+  //   'USDC',
+  //   'USD//C',
+  // )
 
-  const maticAmout = CurrencyAmount.fromRawAmount(MATIC, JSBI.BigInt(ethers.utils.parseUnits(amountIn.toString())))
+  // const maticAmout = CurrencyAmount.fromRawAmount(MATIC, JSBI.BigInt(ethers.utils.parseUnits(amountIn.toString())))
 
   try {
-    const route = await router.route(
-      maticAmout,
-      USDC,
-      TradeType.EXACT_INPUT,
-      {
-        recipient: walletAddress,
-        slippageTolerance: new Percent(3, 100),
-        deadline: Math.floor(Date.now() / 1000 + 1800),
-      },
-    )
+    // const route = await router.route(
+    //   maticAmout,
+    //   USDC,
+    //   TradeType.EXACT_INPUT,
+    //   {
+    //     recipient: walletAddress,
+    //     slippageTolerance: new Percent(3, 100),
+    //     deadline: Math.floor(Date.now() / 1000 + 1800),
+    //   },
+    // )
 
-    console.log('test')
+    // console.log('test')
 
     // if (route != null) {
     //   maticGasFee += parseFloat(route?.estimatedGasUsedQuoteToken.toFixed(6))
