@@ -21,8 +21,7 @@ interface Amount {
 
 export const estimateFee = async (amountIn: number, walletWithProvider: ethers.providers.Web3Provider, walletWithAstarProvider: ethers.Wallet): Promise<
   [number, number, number, number, number, number, number]> => {
-  const test = await walletWithAstarProvider.getChainId()
-  console.log(test)
+  console.log(walletWithAstarProvider)
   const signer = walletWithProvider.getSigner()
   const walletAddress = await signer.getAddress()
 
