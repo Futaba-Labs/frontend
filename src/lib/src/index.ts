@@ -16,6 +16,9 @@ const privateKey = randomWallet.privateKey
 const astarProvider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_ASTAR_URL ?? '')
 const walletWithAstarProvider = new ethers.Wallet(privateKey, astarProvider)
 
+console.log(process.env.NEXT_PUBLIC_ASTAR_URL)
+
+
 interface Window {
   ethereum?: import('ethers').providers.ExternalProvider;
 }
