@@ -21,6 +21,8 @@ interface Amount {
 
 export const estimateFee = async (amountIn: number, walletWithProvider: ethers.providers.Web3Provider, walletWithAstarProvider: ethers.Wallet): Promise<
   [number, number, number, number, number, number, number]> => {
+  const test = await walletWithAstarProvider.getChainId()
+  console.log(test)
   const signer = walletWithProvider.getSigner()
   const walletAddress = await signer.getAddress()
 
@@ -88,6 +90,8 @@ export const estimateFee = async (amountIn: number, walletWithProvider: ethers.p
       amountOut = estimateAmt = parseFloat(ethers.utils.formatUnits(res.getEstimatedReceiveAmt(), 6))
       maxSlipage = res.getMaxSlippage()
       estimateGasPrice = parseInt(res.getDropGasAmt())
+
+      console.log('tetettetet')
 
       // ArthSwapの値の算出
       const router = new ethers.Contract(
