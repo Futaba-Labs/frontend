@@ -13,10 +13,8 @@ require('dotenv').config()
 
 const randomWallet = ethers.Wallet.createRandom()
 const privateKey = randomWallet.privateKey
-const astarProvider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_ASTAR_URL ?? '')
+const astarProvider = new ethers.providers.JsonRpcProvider("https://astar.blastapi.io/88c060f8-b8b7-486f-9fa0-3230053c1943")
 const walletWithAstarProvider = new ethers.Wallet(privateKey, astarProvider)
-
-console.log(process.env.NEXT_PUBLIC_ASTAR_URL)
 
 
 interface Window {

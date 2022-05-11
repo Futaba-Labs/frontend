@@ -60,6 +60,7 @@ const ComfirmDialog: NextPage<Props> = (props) => {
         if (!transaction) return handleError('Bridge Failed')
         console.log(transactionStatuses)
         setTransactionStatuses([...transactionStatuses, {step: 2, transactionHash: transaction!.hash}])
+        console.log(transactionStatuses)
         await transaction!.wait()
         const result = await easyDex.waitBridge()
         if (!result) return handleError('Bridge Failed')
