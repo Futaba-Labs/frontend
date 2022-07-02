@@ -2,7 +2,7 @@ import type {NextPage} from 'next'
 import Image from 'next/image'
 import styles from '../styles/ChainSelect.module.css'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-import {Container, Spacer} from '@nextui-org/react'
+import {Container, Spacer, Dropdown } from '@nextui-org/react'
 import {Chain} from '@/types/utilTypes'
 import {getChainImage} from '@/utils/handleChainAndCoin'
 

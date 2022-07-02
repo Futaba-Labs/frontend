@@ -15,6 +15,7 @@ import { keccak256 } from '@ethersproject/solidity';
 import abi from '@/utils/abi.json'
 import { useContract } from '@/hooks/useContract'
 import { bscToRinkebyData, messageBusABI, polygonToBscData, rinkebyToBscTestnetData, transferContractABI, transferContractAddress } from '@/utils/consts'
+import { estimateAmountAndFee } from '@/lib'
 
 
 enum BridgeType {
@@ -46,7 +47,9 @@ const Home: NextPage = () => {
 
   const transferSwap = async () => {
     try {
-      const amountIn = parseUnits('1', 4)
+      const dstProvider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org")
+
+      const amountIn = parseUnits('1', 16)
       const tokenIn = polygonToBscData.tokenIn
       const tokenOut = polygonToBscData.tokenOut
       const dstTokenIn = polygonToBscData.dstTokenIn
@@ -108,29 +111,33 @@ const Home: NextPage = () => {
       }
 
       if(provider) {
-        const signer = provider.getSigner()
-
-        const token0Contract = new ethers.Contract(
-          tokenIn,
-          abi,
-          signer,
-        )
-
-        const approveResult = await token0Contract.approve(
-          transferContractAddress,
-          amountIn.mul(2),
-    )
-    await approveResult.wait()
-    if(contract) {
-      const quoteData = await contract.quoteLayerZeroFee(desc.dstChainId, recipient, false, dstData, dstRouter, false);
-      console.log('fee:', quoteData[0])
-      const gasFee: BigNumber = quoteData[0]
-      const tx = await contract.transferWithSwap(desc, srcData, dstData, { gasLimit: ethers.utils.hexlify(2000000), value: gasFee },
-  )
-  await tx.wait()
-  console.log(tx)
-    }
+        const [amountOut, fee] = await estimateAmountAndFee(0.01, tokenIn, tokenOut, recipient, polygonToBscData.srcChainId, router, polygonToBscData.dstChainId, dstTokenIn, dstTokenOut, dstRouter, false, false, dstData, provider, dstProvider)
+        console.log(`amountOut: ${amountOut} fee: ${fee}`)
       }
+  //     if(provider) {
+  //       const signer = provider.getSigner()
+
+  //       const token0Contract = new ethers.Contract(
+  //         tokenIn,
+  //         abi,
+  //         signer,
+  //       )
+
+  //       const approveResult = await token0Contract.approve(
+  //         transferContractAddress,
+  //         amountIn.mul(2),
+  //   )
+  //   await approveResult.wait()
+  //   if(contract) {
+  //     const quoteData = await contract.quoteLayerZeroFee(desc.dstChainId, recipient, false, dstData, dstRouter, false);
+  //     console.log('fee:', quoteData[0])
+  //     const gasFee: BigNumber = quoteData[0]
+  //     const tx = await contract.transferWithSwap(desc, srcData, dstData, { gasLimit: ethers.utils.hexlify(2000000), value: gasFee },
+  // )
+  // await tx.wait()
+  // console.log(tx)
+  //   }
+  //     }
 
         } catch (error) {
           console.log(error)
@@ -165,10 +172,10 @@ const Home: NextPage = () => {
       </header>
       <div className={styles.relative}>
       </div>
-      {/* <Button onClick={async () => await transferSwap()}>Button</Button>
-      <Button onClick={async () => await setCrossChainRouter()}>SetRouter</Button> */}
-      <SwapCard />
-      <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/>
+      <Button onClick={async () => await transferSwap()}>Button</Button>
+      <Button onClick={async () => await setCrossChainRouter()}>SetRouter</Button>
+      {/* <SwapCard />
+      <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/> */}
       <ToastContainer
         autoClose={3000}
         hideProgressBar={false}
