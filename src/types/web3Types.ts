@@ -1,5 +1,5 @@
-import {ethers} from 'ethers'
-import {TransactionStatus} from './utilTypes'
+import { ethers } from 'ethers'
+import { TransactionStatus } from './utilTypes'
 
 export interface Web3ContextInterface {
   transactionStatuses: TransactionStatus[]
@@ -7,7 +7,7 @@ export interface Web3ContextInterface {
   visible: boolean
   setVisible: (visible: boolean) => void
   connectWallet: () => Promise<void>;
-  setTransactionStatuses: (transactionStatuses: TransactionStatus[]) => void
+  addTransactionStatus: (transactionStatus: TransactionStatus) => void
 }
 
 export interface NFT {

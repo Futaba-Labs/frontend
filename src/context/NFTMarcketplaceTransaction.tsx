@@ -16,7 +16,7 @@ const getDefaultContextValue = (): Web3ContextInterface => ({
   visible: false,
   setVisible: (visible: boolean) => {},
   connectWallet: async () => {},
-  setTransactionStatuses: (transactionStatuses: TransactionStatus[]) => {},
+  addTransactionStatus: (transactionStatus: TransactionStatus) => {},
 })
 
 export const NFTMarcketTransaction = createContext<Web3ContextInterface>(getDefaultContextValue())
@@ -71,9 +71,14 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{ key?: strin
     }
   }
 
+  const addTransactionStatus = (transactionStatus: TransactionStatus) => {
+    console.log(transactionStatuses)
+    setTransactionStatuses([...transactionStatuses, transactionStatus])
+  }
+
   useEffect(() => {
     connectWallet()
-    changeNetwork()
+    // changeNetwork()
   })
 
   return (
@@ -84,7 +89,7 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{ key?: strin
         visible,
         setVisible,
         connectWallet,
-        setTransactionStatuses,
+        addTransactionStatus,
       }}
     >
       {children}

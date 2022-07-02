@@ -22,7 +22,7 @@ interface Props {
 }
 
 const ComfirmDialog: NextPage<Props> = (props) => {
-  const {provider, transactionStatuses, setTransactionStatuses, visible, setVisible} = useWeb3()
+  const {provider, transactionStatuses, addTransactionStatus, visible, setVisible} = useWeb3()
   const price = (parseFloat(props.dstData.amount) / parseFloat(props.srcData.amount)).toFixed(6)
 
   const [isLoaded, setIsLoaded] = useState(true)
@@ -52,15 +52,13 @@ const ComfirmDialog: NextPage<Props> = (props) => {
         if (amountOut === 0) return handleError('Transaction Error')
         let transaction = await easyDex.swapByUniswap()
         if (!transaction) return handleError('Swap Failed')
-        setTransactionStatuses([...transactionStatuses, {step: 1, transactionHash: transaction!.hash}])
+        addTransactionStatus({step: 1, transactionHash: transaction!.hash})
         await transaction!.wait()
         console.log('Completed Swap')
         await easyDex.completeSwap()
         transaction = await easyDex.bridge()
         if (!transaction) return handleError('Bridge Failed')
-        console.log(transactionStatuses)
-        setTransactionStatuses([...transactionStatuses, {step: 2, transactionHash: transaction!.hash}])
-        console.log(transactionStatuses)
+        addTransactionStatus({step: 2, transactionHash: transaction!.hash})
         await transaction!.wait()
         const result = await easyDex.waitBridge()
         if (!result) return handleError('Bridge Failed')
@@ -68,10 +66,10 @@ const ComfirmDialog: NextPage<Props> = (props) => {
         const astarProvider = provider
         await easyDex.setWeb3Provider(astarProvider)
         transaction = await easyDex.swapByArthswap()
-        setTransactionStatuses([...transactionStatuses, {step: 3, transactionHash: transaction!.hash}])
+        addTransactionStatus({step: 3, transactionHash: transaction!.hash})
         if (!transaction) return handleError('Swap Failed')
         await transaction?.wait()
-        setTransactionStatuses([...transactionStatuses, {step: 4, transactionHash: transaction!.hash}])
+        addTransactionStatus({step: 4, transactionHash: transaction!.hash})
         setIsLoaded(true)
         props.onClose()
         toast.success('Transaction Completed')

@@ -18,12 +18,11 @@ interface Props {
 }
 
 const StatusDialog: NextPage<Props> = (props) => {
-  const {provider, transactionStatuses, setTransactionStatuses, visible, setVisible} = useWeb3()
+  const {provider, transactionStatuses, addTransactionStatus, visible, setVisible} = useWeb3()
 
 
   const [length, setLength] = useState(0)
   useEffect(() => {
-    console.log(transactionStatuses)
     setLength(props.transactionStatuses.length)
   }, [props.transactionStatuses])
 

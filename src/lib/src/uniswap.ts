@@ -57,7 +57,7 @@ export const uniswap = async (web3Provider: ethers.providers.Web3Provider, amoun
         to: V3_SWAP_ROUTER_ADDRESS,
         value: parsedAmountIn,
         from: walletAddress,
-        gasPrice: BigNumber.from(route.gasPriceWei).mul(2),
+        gasPrice: BigNumber.from(route.gasPriceWei).mul(10),
       }
 
       const tx = await signer.sendTransaction(transaction)

@@ -1,4 +1,4 @@
-import {ethers} from 'ethers'
+import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
 
 const providerOptions = async () => ({
@@ -19,3 +19,5 @@ export const getWeb3Provider = async (): Promise<
   const provider = new ethers.providers.Web3Provider(instance, 'any')
   return [instance, provider]
 }
+
+export const getTargetContract = () => { }

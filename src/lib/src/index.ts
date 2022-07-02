@@ -67,12 +67,13 @@ export class EasyDex {
   completeSwap = async () => {
     const balance = await this.currentBalance()
     const transferredAmount = balance.sub(this.currentSwappedAmount)
-    this.currentAmount = transferredAmount
+    this.currentAmount = transferredAmount.div(10)
   }
 
   // polygon側でのブリッジの送信(return tx)
   bridge = async (): Promise<ethers.providers.TransactionResponse | null> => {
     const [maticGasFee, bridgeFee, bridgeRate, amountOut, maxSlipage, estimateAmt, estimateGasPrice] = await estimateFee(this.currentAmountNumber, this.web3Provider, walletWithAstarProvider)
+    console.log(this.currentAmount)
     const [transaction, transferId] = await bridge(this.web3Provider, this.currentAmount, maxSlipage)
     if (!transaction) return null
     this.transferId = transferId

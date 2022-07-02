@@ -16,18 +16,18 @@ export const bridge = async (web3Provider: ethers.providers.Web3Provider, amount
     signer,
   )
 
-  // ここ先にapproveの判定を入れたい
-  const approveResult = await token0Contract.approve(
-    '0x88DCDC47D2f83a99CF0000FDF667A468bB958a78',
-    ethers.utils.parseUnits('30', 6),
-    {
-      gasLimit: ethers.utils.hexlify(2000000),
-      gasPrice: BigNumber.from(40000000000),
-    },
-  )
+  // // ここ先にapproveの判定を入れたい
+  // const approveResult = await token0Contract.approve(
+  //   '0x88DCDC47D2f83a99CF0000FDF667A468bB958a78',
+  //   ethers.utils.parseUnits('30', 6),
+  //   {
+  //     gasLimit: ethers.utils.hexlify(2000000),
+  //     gasPrice: BigNumber.from(500000000000),
+  //   },
+  // )
 
-  console.log('Approving...')
-  await approveResult.wait()
+  // console.log('Approving...')
+  // await approveResult.wait()
   console.log('Completed Approve')
 
   const bridge = new ethers.Contract(
@@ -46,7 +46,7 @@ export const bridge = async (web3Provider: ethers.providers.Web3Provider, amount
       maxSlipage,
       {
         gasLimit: ethers.utils.hexlify(2000000),
-        gasPrice: BigNumber.from(40000000000),
+        gasPrice: BigNumber.from(100000000000),
       },
     )
 
