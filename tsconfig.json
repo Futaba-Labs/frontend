@@ -20,6 +20,6 @@
       "/*": ["*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/api/hello.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/api/hello.js", "src/components/AddNoteIcon.js"],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,4 @@
-import {Button, Card, Container, Input, Loading, Spacer} from '@nextui-org/react'
+import {Button, Card, Container, createTheme, Input, Loading, NextUIProvider, Spacer} from '@nextui-org/react'
 import type {NextPage} from 'next'
 import styles from '../styles/SwapCard.module.css'
 import Image from 'next/image'
@@ -6,11 +6,14 @@ import SwapVertIcon from '@mui/icons-material/SwapVert'
 import CoinSelect from './coinSelect'
 import {SetStateAction, useCallback, useEffect, useState} from 'react'
 import ChainSelect from './chainSelect'
+import Chains from './Chains'
 import {Chain, Coin, TransactionData} from '@/types/utilTypes'
 import ConfirmDialog from './confirmDialog'
 import {useWeb3} from '@/hooks/useWeb3'
 import ErrorMessage from './errorMessage'
 import { EasyDex } from '@/lib/src'
+import cross_arrow from '../images/cross_arrow.png'
+import { color } from '@mui/system'
 
 
 const polygonCoins: Coin[] = [
@@ -20,9 +23,9 @@ const polygonCoins: Coin[] = [
   // {name: 'USDT', address: '0x00'},
 ]
 
-const astarCoins: Coin[] = [
+const binanceCoins: Coin[] = [
   // {name: 'USDC', address: '0x00'},
-  {name: 'ASTR', address: '0x00'},
+  {name: 'BNB', address: '0x00'},
 ]
 
 
@@ -49,6 +52,28 @@ const SwapCard: NextPage = () => {
     setDstData({chain: dstChain, coin: dstCoin, amount: dstAmount})
     setVisible(true)
   }
+
+  const myTheme = createTheme({
+    type:"dark",
+    theme: {
+      colors: {
+        backcolor:"#383838",
+        waring:"#333333",
+        primary: '#383838',
+      },
+
+      // ...
+    }
+  });
+  const darkTheme = createTheme({
+    type: "dark",
+    theme: {
+      colors: { background: '#1d1d1d',
+      text: '#fff',
+      // you can also create your own color
+      myDarkColor: '#ff4ecd'}
+    }
+  });
 
   const closeHandler = () => {
     setVisible(false)
@@ -118,14 +143,22 @@ const SwapCard: NextPage = () => {
 
   return (
     <div className={styles.swap_card}>
+       <NextUIProvider theme={darkTheme}>
       <Card>
         <Card.Body>
           <div className="top_padding_4"></div>
           <p className="common_text">From</p>
-          <ChainSelect chain={srcChain} onChange={selectSrcChain}/>
-          <div className={styles.src_chain_amount}>
-            <Input
+          <div className={styles.chain_select} ><Chains chain={srcChain} onChange={selectSrcChain}/> <div className={styles.cross_arrow} ><Image src={cross_arrow} width={20} height={20} alt="aa" /></div> <Chains chain={srcChain} onChange={selectSrcChain}/></div>
+         
+         <div className={styles.coin_select_box}>
+          
+      <div className={styles.src_chain_amount}>
+       <div className={styles.currency_title}>from</div> 
+     
+      <Input
               size={'xl'}
+              shadow={false}
+              css={{$$inputColor: "#383838"}}
               contentRightStyling={false}
               placeholder="0.0"
               fullWidth={true}
@@ -134,15 +167,11 @@ const SwapCard: NextPage = () => {
                 <CoinSelect coinName={srcCoin.name} onChange={selectSrcCoin} currencies={polygonCoins}/>
               }
             />
-          </div>
-          <div className="top_padding_8"></div>
-          <div className={styles.swap_icon}>
-            <SwapVertIcon sx={{color: '#b8b9bb', fontSize: 30}}/>
-          </div>
-          <p className="common_text">To</p>
-          <ChainSelect chain={dstChain} onChange={selectDstChain}/>
-          <div className={styles.dst_chain_amount}>
+            
+            </div>
+            <div className={styles.dst_chain_amount}>
             <Input
+            css={{$$inputColor: "#383838"}}
               size={'xl'}
               value={dstAmount}
               contentRightStyling={false}
@@ -151,10 +180,17 @@ const SwapCard: NextPage = () => {
               readOnly={true}
               onChange={inputDstAmount}
               contentRight={
-                <CoinSelect coinName={dstCoin.name} onChange={selectDstCoin} currencies={astarCoins}/>
+                <CoinSelect coinName={dstCoin.name} onChange={selectDstCoin} currencies={binanceCoins}/>
               }
             />
           </div>
+            </div>
+      
+          
+          <div className="top_padding_8"></div>
+        
+        
+
           <div className="top_padding_8"></div>
           <ErrorMessage message={error} visible={error !== ''}/>
           <div className="top_padding_16"></div>
@@ -163,6 +199,7 @@ const SwapCard: NextPage = () => {
         </Card.Body>
       </Card>
       <ConfirmDialog srcData={srcData} dstData={dstData} visible={visible} onClose={closeHandler} cost={cost}/>
+      </NextUIProvider>
     </div>
   )
 }
