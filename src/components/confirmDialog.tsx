@@ -89,19 +89,19 @@ const ComfirmDialog: NextPage<Props> = (props) => {
         onClose={() => props.onClose()}
       >
         <Modal.Body>
-          <p className="black_text">Confirm Exchange</p>
+          <p className={styles.title}>Confirm Exchange</p>
           <div className={styles.swap_predict}>
             <Row justify={'space-between'} className="bottom_padding_8">
               <Col>
                 <Row justify={'flex-start'}>
                   <div className="left_padding_4"></div>
                   <Col><Image src={getCoinImage(props.srcData.coin.name)} width={27} height={27}/></Col>
-                  <Col className="top_padding_4"><span className="black_text">{props.srcData.amount}</span></Col>
+                  <Col className="top_padding_4"><span className={styles.content_text}>{props.srcData.amount}</span></Col>
                 </Row>
               </Col>
               <Spacer x={6}/>
               <Col className="top_padding_4 text_right">
-                <span className="black_text">{props.srcData.coin.name}</span>
+                <span className={styles.content_text}>{props.srcData.coin.name}</span>
               </Col>
             </Row>
             <ArrowDownwardIcon sx={{color: '#b8b9bb', fontSize: 30}}/>
@@ -110,61 +110,61 @@ const ComfirmDialog: NextPage<Props> = (props) => {
               <Col>
                 <Row>
                   <Col><Image src={getCoinImage(props.dstData.coin.name)} width={32} height={32}/></Col>
-                  <Col className="top_padding_4"><span className="black_text">{props.dstData.amount}</span></Col>
+                  <Col className="top_padding_4"><span className={styles.content_text}>{props.dstData.amount}</span></Col>
                 </Row>
               </Col>
               <Spacer x={1}/>
               <Col className="top_padding_4 text_right">
-                <span className="black_text">{props.dstData.coin.name}</span>
+                <span className={styles.content_text}>{props.dstData.coin.name}</span>
               </Col>
             </Row>
           </div>
           <div className={styles.swap_price}>
             <Row justify={'flex-start'} fluid={true}>
-              <span className="common_small_text">price</span>
+              <span className={styles.content_text_small}>price</span>
               <Spacer x={3}/>
               <div className={styles.price_list}>
-                <Image src={getCoinImage(props.srcData.coin.name)} width={18} height={14}/>
-                <span className="black_small_text">1 {props.srcData.coin.name}</span>
+                <Image src={getCoinImage(props.srcData.coin.name)} width={24} height={14}/>
+                <span className={styles.content_text_small}>1 {props.srcData.coin.name}</span>
                 <div className="left_padding_4"></div>
                       =
                 <div className="left_padding_4"></div>
-                <Image src={getCoinImage(props.dstData.coin.name)} width={19} height={15}/>
-                <span className="black_small_text">{price} {props.dstData.coin.name}</span>
+                <Image src={getCoinImage(props.dstData.coin.name)} width={24} height={15}/>
+                <span className={styles.content_text_small}>{price} {props.dstData.coin.name}</span>
               </div>
             </Row>
           </div>
           <Container fluid={true} className={styles.detail}>
             <Row justify={'space-between'}>
               <Col>
-                <span className="common_small_text">Cost</span>
+                <span className={styles.content_text_small_silver}>Cost</span>
               </Col>
               <Col className="text_right top_padding_4">
-                <span className="black_small_text">{props.cost} {props.srcData.coin.name}</span>
+                <span className={styles.content_text_small}>{props.cost} {props.srcData.coin.name}</span>
               </Col>
             </Row>
             <Row justify={'space-between'}>
               <Col>
-                <span className="common_small_text">Time required</span>
+                <span className={styles.content_text_small_silver}>Time required</span>
               </Col>
               <Col className="text_right top_padding_4">
-                <span className="black_small_text">10~20 min</span>
+                <span className={styles.content_text_small}>10~20 min</span>
               </Col>
             </Row>
             <Row justify={'space-between'}>
               <Col>
-                <span className="common_small_text">Lowest price</span>
+                <span className={styles.content_text_small_silver}>Lowest price</span>
               </Col>
               <Col className="text_right top_padding_4">
-                <span className="black_small_text">{parseFloat(props.dstData.amount) * 0.97} {props.dstData.coin.name}</span>
+                <span className={styles.content_text_small}>{parseFloat(props.dstData.amount) * 0.97} {props.dstData.coin.name}</span>
               </Col>
             </Row>
             <Row justify={'space-between'}>
               <Col>
-                <span className="common_small_text">Slippage Tolerance</span>
+                <span className={styles.content_text_small_silver}>Slippage Tolerance</span>
               </Col>
               <Col className="text_right top_padding_4">
-                <span className="black_small_text">3%</span>
+                <span className={styles.content_text_small}>3%</span>
               </Col>
             </Row>
           </Container>

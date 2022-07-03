@@ -16,7 +16,7 @@ import abi from '@/utils/abi.json'
 import { useContract } from '@/hooks/useContract'
 import { bscToRinkebyData, messageBusABI, polygonToBscData, rinkebyToBscTestnetData, transferContractABI, transferContractAddress } from '@/utils/consts'
 import { estimateAmountAndFee } from '@/lib'
-
+import background from '../images/background.png'
 
 enum BridgeType {
   Null,
@@ -174,10 +174,11 @@ const Home: NextPage = () => {
       </header>
       <div className={styles.relative}>
       </div>
-      <Button onClick={async () => await transferSwap()}>Button</Button>
-      <Button onClick={async () => await setCrossChainRouter()}>SetRouter</Button>
-      {/* <SwapCard />
-      <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/> */}
+      {/* <Button onClick={async () => await transferSwap()}>Button</Button>
+      <Button onClick={async () => await setCrossChainRouter()}>SetRouter</Button> */}
+      
+      <SwapCard />
+      <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/>
       <ToastContainer
         autoClose={3000}
         hideProgressBar={false}
@@ -189,7 +190,9 @@ const Home: NextPage = () => {
         draggable
         pauseOnHover
       />
-    </div>
+      </div>
+     
+      
   )
 }
 

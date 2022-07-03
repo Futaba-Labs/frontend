@@ -2,6 +2,11 @@ export interface Chain {
   id: number
   name: string
 }
+export interface Chains {
+  id: number
+  name: string
+}
+
 
 export interface Coin {
   name: string
