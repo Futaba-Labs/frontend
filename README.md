@@ -22,7 +22,8 @@ Used in messaging between Polygon and BSC
 
 Pancake Swap Contract
 Used in Pancake Swap to get price and execute swap
-![futaba](https://imgur.com/XA5Duvk "サンプル")
+
+![46](https://user-images.githubusercontent.com/107232502/177028200-e74c35c1-9950-4e61-bcfe-5d7e48a6020b.png)
 
 ## Polygonscan links of smart contracts
 0x29F558023ddcED57E8B3A47743c575D11f141912
