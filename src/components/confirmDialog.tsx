@@ -12,7 +12,6 @@ import {toast} from 'react-toastify'
 import StatusDialog from './statusDialog'
 import { EasyDex } from '@/lib/src'
 
-
 interface Props {
   srcData: TransactionData
   dstData: TransactionData
