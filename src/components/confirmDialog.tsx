@@ -11,6 +11,12 @@ import {getCoinImage} from '@/utils/handleChainAndCoin'
 import {toast} from 'react-toastify'
 import StatusDialog from './statusDialog'
 import { EasyDex } from '@/lib/src'
+import { BigNumber, ethers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
+import { bscToRinkebyData, transferContractAddress } from '@/utils/consts'
+import abi from '@/utils/abi.json'
+import { useContract } from '@/hooks/useContract'
+
 
 interface Props {
   srcData: TransactionData
@@ -23,8 +29,111 @@ interface Props {
 const ComfirmDialog: NextPage<Props> = (props) => {
   const {provider, transactionStatuses, addTransactionStatus, visible, setVisible} = useWeb3()
   const price = (parseFloat(props.dstData.amount) / parseFloat(props.srcData.amount)).toFixed(6)
+  const contract = useContract()
 
   const [isLoaded, setIsLoaded] = useState(true)
+
+  const transferSwap = async () => {
+    try {
+      const dstProvider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org")
+
+      const amountIn = parseUnits('1', 16)
+      const tokenIn = bscToRinkebyData.tokenIn
+      const tokenOut = bscToRinkebyData.tokenOut
+      const dstTokenIn = bscToRinkebyData.dstTokenIn
+      const dstTokenOut = bscToRinkebyData.dstTokenOut
+      const router = bscToRinkebyData.router
+      const dstRouter = bscToRinkebyData.dstRouter
+      const recipient = "0x221E25Ad7373Fbaf33C7078B8666816586222A09";
+      const feeDeadline = BigNumber.from(Math.floor(Date.now() / 1000 + 1800));
+
+      // const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [tokenIn, 3000, tokenOut]);
+      // const params = {
+      //   path,
+      //   recipient: transferContractAddress,
+      //   deadline: feeDeadline,
+      //   amountIn,
+      //   amountOutMinimum: parseUnits('1', 4),
+      // };
+      // const srcData = ethers.utils.defaultAbiCoder.encode(
+      //   ['(bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum)'],
+      //   [params]
+      // );
+
+      // const dstData = ethers.utils.defaultAbiCoder.encode(
+      //   ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
+      //   [amountIn, amountIn.div(3), [dstTokenIn, dstTokenOut], recipient, feeDeadline]
+      // );
+
+      const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [dstTokenIn, 3000, dstTokenOut]);
+      const params = {
+        path,
+        recipient,
+        deadline: feeDeadline,
+        amountIn,
+        amountOutMinimum: parseUnits('1', 4),
+      };
+
+      const dstData = ethers.utils.defaultAbiCoder.encode(
+        ['(bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum)'],
+        [params]
+      );
+
+      const srcData = ethers.utils.defaultAbiCoder.encode(
+        ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
+        [amountIn, amountIn.div(3), [tokenIn, tokenOut], transferContractAddress, feeDeadline]
+      );
+      const desc = {
+        to: recipient,
+        nativeIn: false,
+        nativeOut: true,
+        amountIn,
+        tokenIn,
+        tokenOut,
+        srcSkipSwap: true,
+        dstSkipSwap: false,
+        dstTokenOut,
+        router,
+        dstRouter,
+        srcChainId: bscToRinkebyData.srcChainId,
+        dstChainId: bscToRinkebyData.dstChainId
+      }
+      if(provider) {
+        setIsLoaded(false)
+        props.onClose()
+        setVisible(true)
+        const signer = provider.getSigner()
+
+        const token0Contract = new ethers.Contract(
+          tokenIn,
+          abi,
+          signer,
+        )
+
+        const approveResult = await token0Contract.approve(
+          transferContractAddress,
+          amountIn.mul(2),
+    )
+    await approveResult.wait()
+    if(contract) {
+      const quoteData = await contract.quoteLayerZeroFee(desc.dstChainId, recipient, desc.dstSkipSwap, dstData, dstRouter, desc.nativeOut);
+      console.log('fee:', quoteData[0])
+      const gasFee: BigNumber = quoteData[0]
+      const tx = await contract.transferWithSwap(desc, srcData, dstData, { gasLimit: ethers.utils.hexlify(2000000), value: gasFee },
+  )
+  await tx.wait()
+  console.log(tx)
+  setIsLoaded(true)
+        props.onClose()
+        toast.success('Transaction Completed')
+    }
+      }
+
+        } catch (error) {
+          console.log(error)
+          handleError('Swap Failed')
+        }
+      }
 
   const closeHandler = () => {
     setVisible(false)
@@ -172,7 +281,7 @@ const ComfirmDialog: NextPage<Props> = (props) => {
             <Image src={SwapRoute} objectFit="contain"/>
           </Container>
           <div className="top_padding_8"></div>
-          <Button onClick={() => execute()} rounded css={{backgroundColor: '#1F8506'}} disabled={!isLoaded}>{isLoaded ? 'Exchange' : <Loading />}</Button>
+          <Button onClick={() => transferSwap()} rounded css={{backgroundColor: '#1F8506'}} disabled={!isLoaded}>{isLoaded ? 'Exchange' : <Loading />}</Button>
           <div className="top_padding_8"></div>
         </Modal.Body>
       </Modal>

@@ -9,8 +9,8 @@ export const contractABI = abi.abi
 export const contractAddress = '0x651985C6A1472D33f50DcB6cC2Df841566b268f2'
 
 export const transferContractABI = polygonTransferABI.abi
-// export const transferContractAddress = "0x29F558023ddcED57E8B3A47743c575D11f141912" // main net
-export const transferContractAddress = "0x382d74d905986087201915c8cf54bb722b428552"
+export const transferContractAddress = "0x29F558023ddcED57E8B3A47743c575D11f141912" // main net
+// export const transferContractAddress = "0x382d74d905986087201915c8cf54bb722b428552"
 export const uniswapv3QuoterAddress = "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6"
 export const factoryAddress = "0x1F98431c8aD98523631AE4a59f267346ea31F984"
 export const quoterABI = QuoterABI
