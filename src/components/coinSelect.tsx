@@ -7,6 +7,7 @@ import {SetStateAction, useCallback, useState} from 'react'
 import {Modal, Input, Row, Card, Button, Text, Divider, Col, Spacer} from '@nextui-org/react'
 import {getCoinImage} from '@/utils/handleChainAndCoin'
 
+
 interface Props {
   coinName: string
   currencies: Coin[]

@@ -27,3 +27,31 @@
   padding-left: 12px;
   padding-top: 8px;
 }
+.top_swap_bar{
+  display:flex;
+  justify-content: space-between;
+}
+
+.price_rate{
+  height: auto;
+  width: auto;
+  border-radius: 12px;
+  background-color: #383838;
+  display:flex;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.price_rate_text{
+  font-size: 16px;
+  justify-content: space-between;
+  color: #B8B9BB;
+}
+.price_rate_currency{
+  display:flex;
+}
+.price_rate_currency_text{
+  font-size: 16px;
+  color: #FFFFFF;
+  padding-left: 12px;
+}

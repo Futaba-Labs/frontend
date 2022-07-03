@@ -5,8 +5,10 @@ import {useEffect, useState} from 'react'
 import Image from 'next/image'
 import MATIC from '../images/currency/matic.png'
 import ASTR from '../images/currency/astar_logo.png'
+import BNB from '../images/currency/binance_logo.png'
 import POLYGON_USDC from '../images/currency/polygon_usdc.png'
 import ASTAR_USDC from '../images/currency/astar_usdc.png'
+import Binance_USDT from '../images/currency/binance_usdt.png'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import {useWeb3} from '@/hooks/useWeb3'
 
@@ -51,13 +53,13 @@ const StatusDialog: NextPage<Props> = (props) => {
             {length === 3 && <CheckCircleOutlineIcon sx={{backgroundColor: '#12eb27', textAlign: 'center'}}/>}
             {props.transactionStatuses.length > 1 && <a href={`https://polygonscan.com/tx/${props.transactionStatuses[1].transactionHash}`} target="_blank" rel="noreferrer">View Tx</a>}
           </Col>
-          <Col><Image src={ASTAR_USDC} width={50} height={50}/></Col>
+          <Col><Image src={Binance_USDT} width={50} height={50}/></Col>
           <Col>
             {(length < 4 && length > 2) && <Loading type="points" color="success" css={{textAlign: 'center'}}/>}
             {length === 4 && <CheckCircleOutlineIcon sx={{backgroundColor: '#12eb27', textAlign: 'center'}}/>}
             {props.transactionStatuses.length > 2 && <a href={`https://blockscout.com/astar/tx/${props.transactionStatuses[2].transactionHash}`} target="_blank" rel="noreferrer">View Tx</a>}
           </Col>
-          <Col><Image src={ASTR} width={50} height={50}/></Col>
+          <Col><Image src={BNB} width={50} height={50}/></Col>
         </Row>
         <div className="top_padding_8"></div>
       </Modal.Body>

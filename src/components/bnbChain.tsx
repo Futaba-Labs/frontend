@@ -8,7 +8,7 @@ import {Chain} from '@/types/utilTypes'
 import {getChainImage} from '@/utils/handleChainAndCoin'
 import { AddNoteIcon } from './AddNoteIcon'
 import { style } from '@mui/system'
-import matic from '../images/currency/matic.png'
+import bnb from '../images/currency/binance.png'
 
 interface Props {
   chain: Chain
@@ -16,7 +16,7 @@ interface Props {
 }
 
 
-const ChainSelect: NextPage<Props> = (props) => {
+const bnbChain: NextPage<Props> = (props) => {
 
   const darkTheme = createTheme({
     type: "dark",
@@ -43,7 +43,7 @@ const ChainSelect: NextPage<Props> = (props) => {
     <Dropdown.Button color="primary" >
       <div className={styles.chain_box}>
       <div className={styles.chain_icon}>
-      <Image src={matic} width={20} height={20} alt="aa" />
+      <Image src={bnb} width={20} height={20} alt="aa" />
       </div>
         <div className={styles.chain_name}>
      
@@ -64,6 +64,7 @@ const ChainSelect: NextPage<Props> = (props) => {
     <Dropdown.Item
           key="Polygon"
           command="mainnet"
+          
         >
         Polygon
 
@@ -74,34 +75,6 @@ const ChainSelect: NextPage<Props> = (props) => {
       >
         BSC
       </Dropdown.Item>
-      <Dropdown.Item
-        key="Avalanche"
-        command="test"
-        css={{color:'#383838'}}
-      >
-        Avalanche
-      </Dropdown.Item>
-      <Dropdown.Item
-        key="Ethereum"
-        command="test"
-        css={{color:'#383838'}}
-      >
-        Ethereum
-      </Dropdown.Item>
-      <Dropdown.Item
-        key="Astar Network"
-        command="test"
-        css={{color:'#383838'}}
-      >
-        Astar Network
-      </Dropdown.Item>
-      <Dropdown.Item
-        key="Arbitrum"
-        command="test"
-        css={{color:'#383838'}}
-      >
-        Arbitrum
-      </Dropdown.Item>
 
 
     </Dropdown.Menu>
@@ -111,4 +84,4 @@ const ChainSelect: NextPage<Props> = (props) => {
   )
 }
 
-export default ChainSelect
+export default bnbChain

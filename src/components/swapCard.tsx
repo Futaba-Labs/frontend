@@ -7,6 +7,7 @@ import CoinSelect from './coinSelect'
 import {SetStateAction, useCallback, useEffect, useState} from 'react'
 import ChainSelect from './chainSelect'
 import Chains from './Chains'
+import bnbChain from './bnbChain'
 import {Chain, Coin, TransactionData} from '@/types/utilTypes'
 import ConfirmDialog from './confirmDialog'
 import {useWeb3} from '@/hooks/useWeb3'
@@ -14,6 +15,10 @@ import ErrorMessage from './errorMessage'
 import { EasyDex } from '@/lib/src'
 import cross_arrow from '../images/cross_arrow.png'
 import { color } from '@mui/system'
+import OptionSelect from './optionSelect'
+import matic from '../images/currency/matic.png'
+import bnb from '../images/currency/binance_logo.png'
+import Chains2 from './Chains2'
 
 
 const polygonCoins: Coin[] = [
@@ -34,7 +39,7 @@ const SwapCard: NextPage = () => {
   const [srcCoin, setSrcCoin] = useState<Coin>({name: 'MATIC', address: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'})
   const [srcAmount, setSrcAmount] = useState('')
   const [dstChain, setDstChain] = useState<Chain>({id: 592, name: 'Astar'})
-  const [dstCoin, setDstCoin] = useState<Coin>({name: 'ASTR', address: '0xAeaaf0e2c81Af264101B9129C00F4440cCF0F720'})
+  const [dstCoin, setDstCoin] = useState<Coin>({name: 'BNB', address: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52'})
   const [dstAmount, setDstAmount] = useState('')
   const [srcData, setSrcData] = useState<TransactionData>({chain: srcChain, coin: srcCoin, amount: srcAmount})
   const [dstData, setDstData] = useState<TransactionData>({chain: dstChain, coin: dstCoin, amount: dstAmount})
@@ -144,14 +149,19 @@ const SwapCard: NextPage = () => {
   return (
     <div className={styles.swap_card}>
        <NextUIProvider theme={darkTheme}>
-      <Card>
+      <Card css={{backgroundColor:'#001100'}}>
         <Card.Body>
           <div className="top_padding_4"></div>
-          <p className="common_text">From</p>
-          <div className={styles.chain_select} ><Chains chain={srcChain} onChange={selectSrcChain}/> <div className={styles.cross_arrow} ><Image src={cross_arrow} width={20} height={20} alt="aa" /></div> <Chains chain={srcChain} onChange={selectSrcChain}/></div>
-         
+          <div className={styles.top_swap_bar}>
+          <p className="common_text">Chain</p> <OptionSelect /></div>
+          <div className={styles.chain_select} >
+            <Chains chain={srcChain} onChange={selectSrcChain}/> 
+          <div className={styles.cross_arrow} >
+            <Image src={cross_arrow} width={20} height={20} alt="aa" /></div> 
+            <Chains2 chain={srcChain} onChange={selectSrcChain}/> 
+            </div>
+          <div className="top_padding_8"></div> <div className="top_padding_8"></div>
          <div className={styles.coin_select_box}>
-          
       <div className={styles.src_chain_amount}>
        <div className={styles.currency_title}>from</div> 
      
@@ -184,17 +194,28 @@ const SwapCard: NextPage = () => {
               }
             />
           </div>
+          
             </div>
       
           
           <div className="top_padding_8"></div>
+          <div className="top_padding_8"></div>
+        <div className={styles.price_rate}>
+            <div className={styles.price_rate_text}>price</div>
+            <div className={styles.price_rate_currency}>
+            <div className={styles.price_rate_currency_text}>1MATIC     =</div>
+            <div className={styles.price_rate_currency_text}>0.002BNB</div>
+            </div>
+          </div>
         
-        
+       
 
           <div className="top_padding_8"></div>
           <ErrorMessage message={error} visible={error !== ''}/>
-          <div className="top_padding_16"></div>
-          <Button onClick={handler} rounded css={{backgroundColor: '#1F8506'}} disabled={network !== 137 || !isLoaded || (srcAmount === '' || dstAmount === '') || error !== ''}>{isLoaded ? 'Confirm' : <Loading />}</Button>
+          <div className="top_padding_8"></div>
+          <div className="top_padding_8"></div>
+          <Button onClick={handler} rounded css={{backgroundColor: '#3ABB5E'}} color="success" shadow disabled={network !== 137 || !isLoaded || (srcAmount === '' || dstAmount === '') || error !== ''}>{isLoaded ? 'Confirm' : <Loading />}</Button>
+          <div className="top_padding_8"></div>
           <div className="top_padding_8"></div>
         </Card.Body>
       </Card>

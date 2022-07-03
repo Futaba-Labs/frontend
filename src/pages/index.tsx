@@ -15,7 +15,7 @@ import { keccak256 } from '@ethersproject/solidity';
 import abi from '@/utils/abi.json'
 import { useContract } from '@/hooks/useContract'
 import { bscToRinkebyData, messageBusABI, polygonToBscData, rinkebyToBscTestnetData, transferContractABI, transferContractAddress } from '@/utils/consts'
-
+import background from '../images/background.png'
 
 enum BridgeType {
   Null,
@@ -167,6 +167,7 @@ const Home: NextPage = () => {
       </div>
       {/* <Button onClick={async () => await transferSwap()}>Button</Button>
       <Button onClick={async () => await setCrossChainRouter()}>SetRouter</Button> */}
+      
       <SwapCard />
       <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/>
       <ToastContainer
@@ -180,7 +181,9 @@ const Home: NextPage = () => {
         draggable
         pauseOnHover
       />
-    </div>
+      </div>
+     
+      
   )
 }
 

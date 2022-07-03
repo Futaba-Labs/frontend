@@ -8,7 +8,7 @@ import {Chain} from '@/types/utilTypes'
 import {getChainImage} from '@/utils/handleChainAndCoin'
 import { AddNoteIcon } from './AddNoteIcon'
 import { style } from '@mui/system'
-import matic from '../images/currency/matic.png'
+import bnb from '../images/currency/binance_logo.png'
 
 interface Props {
   chain: Chain
@@ -30,7 +30,7 @@ const ChainSelect: NextPage<Props> = (props) => {
   });
 
 
-  const [selected, setSelected] = React.useState(new Set(["Polygon"]));
+  const [selected, setSelected] = React.useState(new Set(["BSC"]));
   const selectedValue = React.useMemo(
     () => Array.from(selected).join(", ").replaceAll("_", " "),
     [selected]
@@ -43,7 +43,7 @@ const ChainSelect: NextPage<Props> = (props) => {
     <Dropdown.Button color="primary" >
       <div className={styles.chain_box}>
       <div className={styles.chain_icon}>
-      <Image src={matic} width={20} height={20} alt="aa" />
+      <Image src={bnb} width={20} height={20} alt="aa" />
       </div>
         <div className={styles.chain_name}>
      
@@ -64,6 +64,7 @@ const ChainSelect: NextPage<Props> = (props) => {
     <Dropdown.Item
           key="Polygon"
           command="mainnet"
+          
         >
         Polygon
 
@@ -74,6 +75,7 @@ const ChainSelect: NextPage<Props> = (props) => {
       >
         BSC
       </Dropdown.Item>
+
       <Dropdown.Item
         key="Avalanche"
         command="test"
@@ -102,8 +104,6 @@ const ChainSelect: NextPage<Props> = (props) => {
       >
         Arbitrum
       </Dropdown.Item>
-
-
     </Dropdown.Menu>
   </Dropdown>
   </NextUIProvider>

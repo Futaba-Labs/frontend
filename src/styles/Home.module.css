@@ -41,7 +41,14 @@
   line-height: 1.5;
   font-size: 1.5rem;
 }
-
+.main{
+  position: relative;
+   width: 1200px;
+}
+.container2{
+  width: 100%;
+  background-image: url(../images/background.png);
+}
 .code {
   background: #fafafa;
   border-radius: 5px;
@@ -93,9 +100,8 @@
   height: 1em;
   margin-left: 0.5rem;
 }
-.home_background {
-  width: 100%;
-}
+
+
 .relative {
   position: relative;
 }
@@ -114,4 +120,7 @@
     width: 100%;
     flex-direction: column;
   }
+}
+.body{
+  background-image: url(../images/background.png);
 }
