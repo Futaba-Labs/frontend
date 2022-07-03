@@ -35,7 +35,7 @@ const Home: NextPage = () => {
     if(contract) {
       // chainId, routerAddress
       // await contract.setCrossChainRouter(2, "0x4B5896a0bFF0B77946009B0DBADD298a348fF6b2")
-      await contract.setCrossChainRouter(10001, "0xdf23e884F3728330FDb8f358e359E8458721C32F")
+      await contract.setCrossChainRouter(10001, "0x9c38f29C8B05e029b099bBFd90d96D1002AB73D8")
 
       // const result = await contract.crossRouters(10001)
       // console.log(result)
@@ -174,11 +174,10 @@ const Home: NextPage = () => {
       </header>
       <div className={styles.relative}>
       </div>
-      {/* <Button onClick={async () => await transferSwap()}>Button</Button>
-      <Button onClick={async () => await setCrossChainRouter()}>SetRouter</Button> */}
-      
+      <Button onClick={async () => await transferSwap()}>Button</Button>
+      <Button onClick={async () => await setCrossChainRouter()}>SetRouter</Button>
       <SwapCard />
-      <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/>
+      {/* <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/> */}
       <ToastContainer
         autoClose={3000}
         hideProgressBar={false}
@@ -191,8 +190,6 @@ const Home: NextPage = () => {
         pauseOnHover
       />
       </div>
-     
-      
   )
 }
 

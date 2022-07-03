@@ -19,6 +19,13 @@ import OptionSelect from './optionSelect'
 import matic from '../images/currency/matic.png'
 import bnb from '../images/currency/binance_logo.png'
 import Chains2 from './Chains2'
+import { useContract } from '@/hooks/useContract'
+import { BigNumber, ethers } from 'ethers'
+import { bscToRinkebyData, polygonToBscData, transferContractAddress } from '@/utils/consts'
+import { estimateAmountAndFee } from '@/lib'
+import abi from '@/utils/abi.json'
+import { parseUnits } from 'ethers/lib/utils'
+
 
 
 const polygonCoins: Coin[] = [
@@ -50,6 +57,7 @@ const SwapCard: NextPage = () => {
   const [isLoaded, setIsLoaded] = useState(true)
 
   const {provider} = useWeb3()
+  const contract = useContract()
 
 
   const handler = () => {
@@ -87,23 +95,83 @@ const SwapCard: NextPage = () => {
 
   const inputSrcAmount = useCallback(
       async (event: { target: { value: SetStateAction<string>; }; }) => {
+        console.log('test')
         setSrcAmount(event.target.value)
         try {
           if (provider !== null) {
             setIsLoaded(false)
-            const signer = provider.getSigner()
-            const address = await signer.getAddress()
-            const easyDex = new EasyDex(provider, parseFloat(event.target.value.toString()), address)
-            const [maticGasFee, bridgeFee, bridgeRate, amountOut, maxSlipage, estimateAmt, estimateGasPrice] = await easyDex.getEstimateFee()
+            const dstProvider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org")
 
-            if (estimateAmt < 20) {
-              setError('Too small amount')
-            } else {
-              setError('')
-            }
-            setDstAmount(amountOut.toFixed(6))
-            setCost(maticGasFee.toFixed(6))
-            setIsLoaded(true)
+      const amountIn = parseUnits('1', 16)
+      const tokenIn = polygonToBscData.tokenIn
+      const tokenOut = polygonToBscData.tokenOut
+      const dstTokenIn = polygonToBscData.dstTokenIn
+      const dstTokenOut = polygonToBscData.dstTokenOut
+      const router = polygonToBscData.router
+      const dstRouter = polygonToBscData.dstRouter
+      const recipient = "0x221E25Ad7373Fbaf33C7078B8666816586222A09";
+      const feeDeadline = BigNumber.from(Math.floor(Date.now() / 1000 + 1800));
+
+      const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [tokenIn, 3000, tokenOut]);
+      const params = {
+        path,
+        recipient: transferContractAddress,
+        deadline: feeDeadline,
+        amountIn,
+        amountOutMinimum: parseUnits('1', 4),
+      };
+      const srcData = ethers.utils.defaultAbiCoder.encode(
+        ['(bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum)'],
+        [params]
+      );
+
+      const dstData = ethers.utils.defaultAbiCoder.encode(
+        ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
+        [amountIn, amountIn.div(3), [dstTokenIn, dstTokenOut], recipient, feeDeadline]
+      );
+
+      // const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [dstTokenIn, 3000, dstTokenOut]);
+      // const params = {
+      //   path,
+      //   recipient,
+      //   deadline: feeDeadline,
+      //   amountIn,
+      //   amountOutMinimum: parseUnits('1', 4),
+      // };
+
+      // const dstData = ethers.utils.defaultAbiCoder.encode(
+      //   ['(bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum)'],
+      //   [params]
+      // );
+
+      // const srcData = ethers.utils.defaultAbiCoder.encode(
+      //   ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
+      //   [amountIn, amountIn.div(3), [tokenIn, tokenOut], transferContractAddress, feeDeadline]
+      // );
+      const desc = {
+        to: recipient,
+        nativeIn: false,
+        nativeOut: true,
+        amountIn,
+        tokenIn,
+        tokenOut,
+        srcSkipSwap: true,
+        dstSkipSwap: false,
+        dstTokenOut,
+        router,
+        dstRouter,
+        srcChainId: polygonToBscData.srcChainId,
+        dstChainId: polygonToBscData.dstChainId
+      }
+
+      if(provider) {
+        const [amountOut, fee] = await estimateAmountAndFee(parseFloat(event.target.value.toString()), tokenIn, tokenOut, recipient, desc.srcChainId, router,desc.dstChainId, dstTokenIn, dstTokenOut, dstRouter, false, false, dstData, provider, dstProvider)
+        console.log(`amountOut: ${amountOut} fee: ${fee}`)
+
+        setDstAmount(amountOut.toString())
+        setCost(fee.toString())
+        setIsLoaded(true)
+      }
           }
         } catch (error) {
           console.log(error)
@@ -138,6 +206,21 @@ const SwapCard: NextPage = () => {
   const fetchNetwork = async () => {
     const n = await provider?.getNetwork()
     setNetwork(n ? n.chainId : 0)
+  }
+
+  const setCrossChainRouter = async () => {
+    if(contract) {
+      // chainId, routerAddress
+      // await contract.setCrossChainRouter(2, "0x4B5896a0bFF0B77946009B0DBADD298a348fF6b2")
+      await contract.setCrossChainRouter(10001, "0xdf23e884F3728330FDb8f358e359E8458721C32F")
+
+      // const result = await contract.crossRouters(10001)
+      // console.log(result)
+
+      // const tx = await contract.refundToken("0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174")
+      // await tx.wait()
+      // console.log(tx)
+    }
   }
 
   // todo ネットワークをフェッチしたい
