@@ -6,10 +6,31 @@ import StargateRouterABI from "@/utils/artifacts/common/StargateRouter.json"
 import { CurrencyAmount, Percent, Token, TradeType } from "@uniswap/sdk-core";
 import { AlphaRouter } from "@uniswap/smart-order-router";
 import { JSBI } from "quickswap-sdk";
-import { transferContractABI, transferContractAddress } from "@/utils/consts";
+import { factoryAddress, quoterABI, transferContractABI, transferContractAddress, uniswapv3QuoterAddress } from "@/utils/consts";
 import { restoreToGeneralChainId } from "@/utils/convertChainId";
+import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
+import { abi as UniswapV3Factory } from "@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json"
+import { Pool } from "@uniswap/v3-sdk";
 
+interface Immutables {
+  factory: string
+  token0: string
+  token1: string
+  fee: number
+  tickSpacing: number
+  maxLiquidityPerTick: ethers.BigNumber
+}
 
+interface State {
+  liquidity: ethers.BigNumber
+  sqrtPriceX96: ethers.BigNumber
+  tick: number
+  observationIndex: number
+  observationCardinality: number
+  observationCardinalityNext: number
+  feeProtocol: number
+  unlocked: boolean
+}
 
 export const estimateAmountAndFee = async (amountIn: number, tokenIn: string, tokenOut: string, to: string, srcChainId: number, router: string, dstChainId: number, dstTokenIn: string, dstTokenOut: string, dstRouter: string, dstSwapSkip: boolean, nativeOut: boolean, dstData: string, provider: ethers.providers.Web3Provider, dstProvider: ethers.providers.JsonRpcProvider): Promise<[number, number]> => {
   let amountOut = BigNumber.from(0)
@@ -25,12 +46,12 @@ export const estimateAmountAndFee = async (amountIn: number, tokenIn: string, to
     // Uniswap V3 → Stargate → Uniswap V2
     amountOut = await estimateAmountByUniswapV3(tokenIn, tokenOut, parsedAmountIn, convertedSrcChainId, provider)
     // amountOut = await estimateAmountByStargate(amountOut, convertedSrcChainId, convertedDstChainId, provider)
-    // amountOut = await estimateAmountByUniswapV2(amountOut, dstTokenIn, dstTokenOut, dstRouter, dstProvider)
+    amountOut = await estimateAmountByUniswapV2(amountOut, dstTokenIn, dstTokenOut, dstRouter, dstProvider)
 
   } else if (srcChainId === 2) {
     // Uniswap V2 → Stargate → Uniswap V3
     amountOut = await estimateAmountByUniswapV2(parsedAmountIn, tokenIn, tokenOut, router, provider)
-    amountOut = await estimateAmountByStargate(amountOut, convertedSrcChainId, convertedDstChainId, provider)
+    // amountOut = await estimateAmountByStargate(amountOut, convertedSrcChainId, convertedDstChainId, provider)
     amountOut = await estimateAmountByUniswapV3(dstTokenIn, dstTokenOut, amountOut, convertedDstChainId, dstProvider)
   }
 
@@ -42,35 +63,18 @@ export const estimateAmountAndFee = async (amountIn: number, tokenIn: string, to
 }
 
 const estimateAmountByUniswapV3 = async (tokenIn: string, tokenOut: string, amountIn: BigNumber, chainId: number, provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider): Promise<BigNumber> => {
+  const quoterContract = new ethers.Contract(
+    uniswapv3QuoterAddress,
+    quoterABI,
+    provider
+  )
+  const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [tokenIn, 3000, tokenOut]);
+  const quotedAmountOut = await quoterContract.callStatic.quoteExactInput(
+    path,
+    amountIn
+  )
 
-  const router = new AlphaRouter({ chainId: chainId, provider: provider })
-  const [TokenIn, TokenOut] = await getTokenInformation(tokenIn, tokenOut, provider, chainId)
-  console.log(chainId)
-
-  const tokenInAmount = CurrencyAmount.fromRawAmount(TokenIn, JSBI.BigInt('1000000000000000000'))
-
-  // https://docs.uniswap.org/protocol/reference/periphery/lens/Quoter#quoteexactinputに変更する
-
-  try {
-    const route = await router.route(
-      tokenInAmount,
-      TokenOut,
-      TradeType.EXACT_INPUT,
-      {
-        recipient: transferContractAddress,
-        slippageTolerance: new Percent(3, 100),
-        deadline: Math.floor(Date.now() / 1000 + 1800),
-      },
-    )
-
-    if (route != null) {
-      return BigNumber.from(route?.quote.toFixed(TokenOut.decimals))
-    }
-  } catch (error) {
-    console.log(`${error}`)
-  }
-
-  return BigNumber.from(0);
+  return quotedAmountOut
 }
 
 const estimateAmountByUniswapV2 = async (amountIn: BigNumber, tokenIn: string, tokenOut: string, router: string, provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider): Promise<BigNumber> => {
@@ -79,6 +83,8 @@ const estimateAmountByUniswapV2 = async (amountIn: BigNumber, tokenIn: string, t
     UniswapV2RouterABI,
     provider,
   )
+
+  amountIn = ethers.utils.parseUnits(ethers.utils.formatUnits(amountIn, 6))
 
   const amountOuts: Amount[] = await contract.getAmountsOut(amountIn, [tokenIn, tokenOut])
   return BigNumber.from(parseInt(amountOuts[1]._hex).toString())
@@ -154,3 +160,42 @@ const getPoolId = (chainId: number): number => {
     return 0;
   }
 }
+async function getPoolImmutables(poolContract: ethers.Contract) {
+  const [factory, token0, token1, fee, tickSpacing, maxLiquidityPerTick] = await Promise.all([
+    poolContract.factory(),
+    poolContract.token0(),
+    poolContract.token1(),
+    poolContract.fee(),
+    poolContract.tickSpacing(),
+    poolContract.maxLiquidityPerTick(),
+  ])
+
+  const immutables: Immutables = {
+    factory,
+    token0,
+    token1,
+    fee,
+    tickSpacing,
+    maxLiquidityPerTick,
+  }
+  return immutables
+}
+
+async function getPoolState(poolContract: ethers.Contract) {
+  // note that data here can be desynced if the call executes over the span of two or more blocks.
+  const [liquidity, slot] = await Promise.all([poolContract.liquidity(), poolContract.slot0()])
+
+  const PoolState: State = {
+    liquidity,
+    sqrtPriceX96: slot[0],
+    tick: slot[1],
+    observationIndex: slot[2],
+    observationCardinality: slot[3],
+    observationCardinalityNext: slot[4],
+    feeProtocol: slot[5],
+    unlocked: slot[6],
+  }
+
+  return PoolState
+}
+

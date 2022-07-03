@@ -34,9 +34,10 @@ const Home: NextPage = () => {
   const setCrossChainRouter = async () => {
     if(contract) {
       // chainId, routerAddress
-      await contract.setCrossChainRouter(2, "0x4B5896a0bFF0B77946009B0DBADD298a348fF6b2")
+      // await contract.setCrossChainRouter(2, "0x4B5896a0bFF0B77946009B0DBADD298a348fF6b2")
+      await contract.setCrossChainRouter(10001, "0xdf23e884F3728330FDb8f358e359E8458721C32F")
 
-      // const result = await contract.crossRouters(2)
+      // const result = await contract.crossRouters(10001)
       // console.log(result)
 
       // const tx = await contract.refundToken("0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174")
@@ -50,54 +51,55 @@ const Home: NextPage = () => {
       const dstProvider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org")
 
       const amountIn = parseUnits('1', 16)
-      const tokenIn = polygonToBscData.tokenIn
-      const tokenOut = polygonToBscData.tokenOut
-      const dstTokenIn = polygonToBscData.dstTokenIn
-      const dstTokenOut = polygonToBscData.dstTokenOut
-      const router = polygonToBscData.router
-      const dstRouter = polygonToBscData.dstRouter
+      const tokenIn = bscToRinkebyData.tokenIn
+      const tokenOut = bscToRinkebyData.tokenOut
+      const dstTokenIn = bscToRinkebyData.dstTokenIn
+      const dstTokenOut = bscToRinkebyData.dstTokenOut
+      const router = bscToRinkebyData.router
+      const dstRouter = bscToRinkebyData.dstRouter
       const recipient = "0x221E25Ad7373Fbaf33C7078B8666816586222A09";
       const feeDeadline = BigNumber.from(Math.floor(Date.now() / 1000 + 1800));
 
-      const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [tokenIn, 3000, tokenOut]);
+      // const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [tokenIn, 3000, tokenOut]);
+      // const params = {
+      //   path,
+      //   recipient: transferContractAddress,
+      //   deadline: feeDeadline,
+      //   amountIn,
+      //   amountOutMinimum: parseUnits('1', 4),
+      // };
+      // const srcData = ethers.utils.defaultAbiCoder.encode(
+      //   ['(bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum)'],
+      //   [params]
+      // );
+
+      // const dstData = ethers.utils.defaultAbiCoder.encode(
+      //   ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
+      //   [amountIn, amountIn.div(3), [dstTokenIn, dstTokenOut], recipient, feeDeadline]
+      // );
+
+      const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [dstTokenIn, 3000, dstTokenOut]);
       const params = {
         path,
-        recipient: transferContractAddress,
+        recipient,
         deadline: feeDeadline,
         amountIn,
         amountOutMinimum: parseUnits('1', 4),
       };
-      const srcData = ethers.utils.defaultAbiCoder.encode(
+
+      const dstData = ethers.utils.defaultAbiCoder.encode(
         ['(bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum)'],
         [params]
       );
 
-      const dstData = ethers.utils.defaultAbiCoder.encode(
+      const srcData = ethers.utils.defaultAbiCoder.encode(
         ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
-        [amountIn, amountIn.div(3), [dstTokenIn, dstTokenOut], recipient, feeDeadline]
+        [amountIn, amountIn.div(3), [tokenIn, tokenOut], transferContractAddress, feeDeadline]
       );
-
-      // const dstDesc = ethers.utils.defaultAbiCoder.encode(
-      //   ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
-      //   [amountIn, amountIn.div(2), [dstTokenIn, dstTokenOut], recipient, feeDeadline]
-      // );
-
-      // address payable to;
-      //   bool nativeIn;
-      //   bool nativeOut;
-      //   uint256 amountIn;
-      //   address tokenIn;
-      //   address tokenOut;
-      //   address dstTokenOut;
-      //   address router;
-      //   address dstRouter;
-      //   uint16 srcChainId;
-      //   uint16 dstChainId;
-
       const desc = {
         to: recipient,
         nativeIn: false,
-        nativeOut: false,
+        nativeOut: true,
         amountIn,
         tokenIn,
         tokenOut,
@@ -106,38 +108,38 @@ const Home: NextPage = () => {
         dstTokenOut,
         router,
         dstRouter,
-        srcChainId: polygonToBscData.srcChainId,
-        dstChainId: polygonToBscData.dstChainId
+        srcChainId: bscToRinkebyData.srcChainId,
+        dstChainId: bscToRinkebyData.dstChainId
       }
 
       if(provider) {
-        const [amountOut, fee] = await estimateAmountAndFee(0.01, tokenIn, tokenOut, recipient, polygonToBscData.srcChainId, router, polygonToBscData.dstChainId, dstTokenIn, dstTokenOut, dstRouter, false, false, dstData, provider, dstProvider)
+        const [amountOut, fee] = await estimateAmountAndFee(0.01, tokenIn, tokenOut, recipient, desc.srcChainId, router,desc.dstChainId, dstTokenIn, dstTokenOut, dstRouter, false, false, dstData, provider, dstProvider)
         console.log(`amountOut: ${amountOut} fee: ${fee}`)
       }
-  //     if(provider) {
-  //       const signer = provider.getSigner()
+      if(provider) {
+        const signer = provider.getSigner()
 
-  //       const token0Contract = new ethers.Contract(
-  //         tokenIn,
-  //         abi,
-  //         signer,
-  //       )
+        const token0Contract = new ethers.Contract(
+          tokenIn,
+          abi,
+          signer,
+        )
 
-  //       const approveResult = await token0Contract.approve(
-  //         transferContractAddress,
-  //         amountIn.mul(2),
-  //   )
-  //   await approveResult.wait()
-  //   if(contract) {
-  //     const quoteData = await contract.quoteLayerZeroFee(desc.dstChainId, recipient, false, dstData, dstRouter, false);
-  //     console.log('fee:', quoteData[0])
-  //     const gasFee: BigNumber = quoteData[0]
-  //     const tx = await contract.transferWithSwap(desc, srcData, dstData, { gasLimit: ethers.utils.hexlify(2000000), value: gasFee },
-  // )
-  // await tx.wait()
-  // console.log(tx)
-  //   }
-  //     }
+        const approveResult = await token0Contract.approve(
+          transferContractAddress,
+          amountIn.mul(2),
+    )
+    await approveResult.wait()
+    if(contract) {
+      const quoteData = await contract.quoteLayerZeroFee(desc.dstChainId, recipient, desc.dstSkipSwap, dstData, dstRouter, desc.nativeOut);
+      console.log('fee:', quoteData[0])
+      const gasFee: BigNumber = quoteData[0]
+      const tx = await contract.transferWithSwap(desc, srcData, dstData, { gasLimit: ethers.utils.hexlify(2000000), value: gasFee },
+  )
+  await tx.wait()
+  console.log(tx)
+    }
+      }
 
         } catch (error) {
           console.log(error)
