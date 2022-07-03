@@ -15,6 +15,7 @@ import { keccak256 } from '@ethersproject/solidity';
 import abi from '@/utils/abi.json'
 import { useContract } from '@/hooks/useContract'
 import { bscToRinkebyData, messageBusABI, polygonToBscData, rinkebyToBscTestnetData, transferContractABI, transferContractAddress } from '@/utils/consts'
+import { estimateAmountAndFee } from '@/lib'
 import background from '../images/background.png'
 
 enum BridgeType {
@@ -33,9 +34,10 @@ const Home: NextPage = () => {
   const setCrossChainRouter = async () => {
     if(contract) {
       // chainId, routerAddress
-      await contract.setCrossChainRouter(2, "0x4B5896a0bFF0B77946009B0DBADD298a348fF6b2")
+      // await contract.setCrossChainRouter(2, "0x4B5896a0bFF0B77946009B0DBADD298a348fF6b2")
+      await contract.setCrossChainRouter(10001, "0x9c38f29C8B05e029b099bBFd90d96D1002AB73D8")
 
-      // const result = await contract.crossRouters(2)
+      // const result = await contract.crossRouters(10001)
       // console.log(result)
 
       // const tx = await contract.refundToken("0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174")
@@ -46,55 +48,58 @@ const Home: NextPage = () => {
 
   const transferSwap = async () => {
     try {
-      const amountIn = parseUnits('1', 4)
-      const tokenIn = polygonToBscData.tokenIn
-      const tokenOut = polygonToBscData.tokenOut
-      const dstTokenIn = polygonToBscData.dstTokenIn
-      const dstTokenOut = polygonToBscData.dstTokenOut
-      const router = polygonToBscData.router
-      const dstRouter = polygonToBscData.dstRouter
+      const dstProvider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org")
+
+      const amountIn = parseUnits('1', 16)
+      const tokenIn = bscToRinkebyData.tokenIn
+      const tokenOut = bscToRinkebyData.tokenOut
+      const dstTokenIn = bscToRinkebyData.dstTokenIn
+      const dstTokenOut = bscToRinkebyData.dstTokenOut
+      const router = bscToRinkebyData.router
+      const dstRouter = bscToRinkebyData.dstRouter
       const recipient = "0x221E25Ad7373Fbaf33C7078B8666816586222A09";
       const feeDeadline = BigNumber.from(Math.floor(Date.now() / 1000 + 1800));
 
-      const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [tokenIn, 3000, tokenOut]);
+      // const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [tokenIn, 3000, tokenOut]);
+      // const params = {
+      //   path,
+      //   recipient: transferContractAddress,
+      //   deadline: feeDeadline,
+      //   amountIn,
+      //   amountOutMinimum: parseUnits('1', 4),
+      // };
+      // const srcData = ethers.utils.defaultAbiCoder.encode(
+      //   ['(bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum)'],
+      //   [params]
+      // );
+
+      // const dstData = ethers.utils.defaultAbiCoder.encode(
+      //   ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
+      //   [amountIn, amountIn.div(3), [dstTokenIn, dstTokenOut], recipient, feeDeadline]
+      // );
+
+      const path = ethers.utils.solidityPack(['address', 'uint24', 'address'], [dstTokenIn, 3000, dstTokenOut]);
       const params = {
         path,
-        recipient: transferContractAddress,
+        recipient,
         deadline: feeDeadline,
         amountIn,
         amountOutMinimum: parseUnits('1', 4),
       };
-      const srcData = ethers.utils.defaultAbiCoder.encode(
+
+      const dstData = ethers.utils.defaultAbiCoder.encode(
         ['(bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum)'],
         [params]
       );
 
-      const dstData = ethers.utils.defaultAbiCoder.encode(
+      const srcData = ethers.utils.defaultAbiCoder.encode(
         ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
-        [amountIn, amountIn.div(3), [dstTokenIn, dstTokenOut], recipient, feeDeadline]
+        [amountIn, amountIn.div(3), [tokenIn, tokenOut], transferContractAddress, feeDeadline]
       );
-
-      // const dstDesc = ethers.utils.defaultAbiCoder.encode(
-      //   ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
-      //   [amountIn, amountIn.div(2), [dstTokenIn, dstTokenOut], recipient, feeDeadline]
-      // );
-
-      // address payable to;
-      //   bool nativeIn;
-      //   bool nativeOut;
-      //   uint256 amountIn;
-      //   address tokenIn;
-      //   address tokenOut;
-      //   address dstTokenOut;
-      //   address router;
-      //   address dstRouter;
-      //   uint16 srcChainId;
-      //   uint16 dstChainId;
-
       const desc = {
         to: recipient,
         nativeIn: false,
-        nativeOut: false,
+        nativeOut: true,
         amountIn,
         tokenIn,
         tokenOut,
@@ -103,10 +108,14 @@ const Home: NextPage = () => {
         dstTokenOut,
         router,
         dstRouter,
-        srcChainId: polygonToBscData.srcChainId,
-        dstChainId: polygonToBscData.dstChainId
+        srcChainId: bscToRinkebyData.srcChainId,
+        dstChainId: bscToRinkebyData.dstChainId
       }
 
+      if(provider) {
+        const [amountOut, fee] = await estimateAmountAndFee(0.01, tokenIn, tokenOut, recipient, desc.srcChainId, router,desc.dstChainId, dstTokenIn, dstTokenOut, dstRouter, false, false, dstData, provider, dstProvider)
+        console.log(`amountOut: ${amountOut} fee: ${fee}`)
+      }
       if(provider) {
         const signer = provider.getSigner()
 
@@ -122,7 +131,7 @@ const Home: NextPage = () => {
     )
     await approveResult.wait()
     if(contract) {
-      const quoteData = await contract.quoteLayerZeroFee(desc.dstChainId, recipient, false, dstData, dstRouter, false);
+      const quoteData = await contract.quoteLayerZeroFee(desc.dstChainId, recipient, desc.dstSkipSwap, dstData, dstRouter, desc.nativeOut);
       console.log('fee:', quoteData[0])
       const gasFee: BigNumber = quoteData[0]
       const tx = await contract.transferWithSwap(desc, srcData, dstData, { gasLimit: ethers.utils.hexlify(2000000), value: gasFee },
@@ -165,11 +174,10 @@ const Home: NextPage = () => {
       </header>
       <div className={styles.relative}>
       </div>
-      {/* <Button onClick={async () => await transferSwap()}>Button</Button>
-      <Button onClick={async () => await setCrossChainRouter()}>SetRouter</Button> */}
-      
+      <Button onClick={async () => await transferSwap()}>Button</Button>
+      <Button onClick={async () => await setCrossChainRouter()}>SetRouter</Button>
       <SwapCard />
-      <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/>
+      {/* <StatusDialog visible={visible} onClose={closeHandler} transactionStatuses={transactionStatuses}/> */}
       <ToastContainer
         autoClose={3000}
         hideProgressBar={false}
@@ -182,8 +190,6 @@ const Home: NextPage = () => {
         pauseOnHover
       />
       </div>
-     
-      
   )
 }
 
