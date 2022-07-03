@@ -1,0 +1,20 @@
+.chain_box {
+    height:68px;
+    width:100px;
+    position: relative
+
+  }
+.chain_name{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%) 
+}
+.chain_icon{
+    position: absolute;
+    top: 58%;
+    left: 5%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%) 
+}

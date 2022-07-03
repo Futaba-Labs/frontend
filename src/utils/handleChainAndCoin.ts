@@ -4,6 +4,8 @@ import USDT from '../images/currency/tether.png'
 import DAI from '../images/currency/dai.png'
 import ASTR from '../images/currency/astar_logo.png'
 import POLYGON from '../images/chain/polygon_logo.png'
+import BNB from '../images/currency/binance_logo.png'
+import { ButtonBase } from '@mui/material'
 
 
 export const getCoinImage = (coinName: string): string => {
@@ -18,6 +20,8 @@ export const getCoinImage = (coinName: string): string => {
       return DAI.src
     case 'ASTR':
       return ASTR.src
+    case 'BNB':
+      return BNB.src
     default:
       return ''
   }
